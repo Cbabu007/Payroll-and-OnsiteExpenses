@@ -1,0 +1,331 @@
+﻿@{
+    Layout = "~/Views/Employee/EmployeeLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ABC Construction</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        html, body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        .sidebar {
+            width: 264px;
+            background-color: #0990F0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .side-btn {
+            width: 100%;
+            height: 83px;
+            background-color: #0990F0;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .side-btn:hover {
+                background-color: #066AC0;
+            }
+
+
+        .main-container {
+            display: flex;
+            flex-wrap: nowrap;
+            width: 100%;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .right-content {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            box-sizing: border-box;
+            height: 100vh;
+            overflow: auto;
+        }
+
+
+        .header {
+            width: 100%;
+            background-color: #0990F0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+            .header h1 {
+                font-size: 2.5rem;
+                color: white;
+                margin: 0;
+                text-align: center;
+            }
+
+
+        .content-frame {
+            width: 100%;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow: auto;
+        }
+
+
+        .viewer-box {
+            border: 2px solid black;
+            border-radius: 40px;
+            width: 100%;
+            max-width: 1060px;
+            padding: 0;
+            background-color: #fff;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+            padding: 20px;
+            box-sizing: border-box;
+            border-radius: 40px;
+            background-color: white;
+        }
+
+
+        table {
+            width: 100%;
+            min-width: 1000px;
+            border-collapse: collapse;
+            margin: 0;
+            table-layout: auto;
+        }
+
+        th, td {
+            border: 2px solid black;
+            padding: 10px;
+            text-align: center;
+            background-color: white;
+        }
+
+        th {
+            background-color: #0990F0;
+            color: white;
+            font-weight: bold;
+        }
+
+
+        table.responsive-table thead {
+            display: none;
+        }
+
+        table.responsive-table tr {
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #ccc;
+            margin-bottom: 10px;
+        }
+
+        table.responsive-table td {
+            border: none;
+            text-align: left;
+            padding: 12px;
+            box-sizing: border-box;
+            width: 100%;
+            background-color: #fff;
+        }
+
+            table.responsive-table td::before {
+                content: attr(data-label);
+                font-weight: bold;
+                display: block;
+                margin-bottom: 4px;
+            }
+
+
+        .section {
+            display: none;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        .dashboard-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+            .dashboard-buttons button {
+                padding: 12px 20px;
+                border-radius: 30px;
+                border: 2px solid black;
+                background-color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+        .dynamic-frame {
+            width: 100%;
+            max-width: 1060px;
+            min-height: 300px;
+            border: 4px solid black;
+            border-radius: 75px;
+            padding: 20px;
+            overflow: auto;
+            box-sizing: border-box;
+        }
+
+        .form-box {
+            border: 2px solid black;
+            border-radius: 40px;
+            width: 90%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 40px 30px;
+            background-color: #fff;
+            box-sizing: border-box;
+        }
+
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+            .form-row label {
+                flex: 1 0 40%;
+                font-weight: bold;
+                text-align: left;
+            }
+
+            .form-row input[type="text"],
+            .form-row input[type="number"] {
+                flex: 1 0 55%;
+                padding: 8px;
+                border: 1px solid #000;
+                margin-left: 20px;
+                box-sizing: border-box;
+            }
+
+            .form-row input[readonly] {
+                background-color: #f5f5f5;
+            }
+
+        select {
+            padding: 8px;
+            border: 1px solid #000;
+            width: 100%;
+            max-width: 300px;
+            box-sizing: border-box;
+        }
+
+    </style>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+
+    </script>
+</head>
+<body style="margin: 0; padding: 0;">
+
+    <div class="content-frame">
+        <h2 style="margin-top: 20px;">Assigned Project For You</h2>
+        <div class="viewer-box">
+            <div class="table-wrapper">
+                <table id="projectTable">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>No</th>
+                            <th>Address1</th>
+                            <th>Address2</th>
+                            <th>Location</th>
+                            <th>Taluk</th>
+                            <th>District</th>
+                            <th>Pincode</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        window.onload = function () {
+            fetch("/AssignedProject/GetAssignedProjectsByEmployee")
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector("#projectTable tbody");
+                    tbody.innerHTML = "";
+
+                    if (!data || data.success === false || data.length === 0) {
+                        alert("No assigned projects found.");
+                        return;
+                    }
+
+                    data.forEach(project => {
+                        const row = `
+                                                                   <tr>
+                                                                        <td>${project.projectName}</td>
+                                                                        <td>${project.startDate.split('T')[0]}</td>
+                                                                        <td>${project.endDate.split('T')[0]}</td>
+                                                                        <td>${project.no}</td>
+                                                                        <td>${project.address1}</td>
+                                                                        <td>${project.address2}</td>
+                                                                        <td>${project.location}</td>
+                                                                        <td>${project.taluk}</td>
+                                                                        <td>${project.district}</td>
+                                                                        <td>${project.pincode}</td>
+                                                                    </tr>
+                                                                `;
+                        tbody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    alert("Failed to load assigned projects.");
+                    console.error("Error:", error);
+                });
+        };
+    </script>
+
+
+</body>
+</html>

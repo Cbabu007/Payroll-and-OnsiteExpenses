@@ -1,0 +1,738 @@
+﻿@{
+    Layout = "~/Views/Admin/AdminLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>ABC Construction</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* disable browser scroll */
+            box-sizing: border-box;
+        }
+
+        .main-container {
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            overflow: hidden;
+        }
+
+
+        .sidebar {
+            position: fixed; /*  sidebar starts from top */
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: 264px;
+            background-color: #0990F0;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: thin;
+            z-index: 1000; /* ensures it's above other content */
+        }
+
+
+
+        .right-content {
+            margin-left: 264px; /* same as sidebar width */
+            height: 100vh;
+            display: flex;
+            flex: 1;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .header {
+            height: 176px;
+            background-color: #0990F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            flex-shrink: 0;
+            width: 100vw; /*  Fill full screen width */
+            margin: 0; /*  Remove any default margin */
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+            .header h1 {
+                font-size: 2.5rem;
+                margin: 0;
+                text-align: center;
+            }
+
+        .content-frame {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .dashboard-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin: 20px auto; /*  Center horizontally */
+            padding: 0;
+        }
+
+
+            .dashboard-buttons button {
+                padding: 12px 20px;
+                border-radius: 30px;
+                border: 2px solid black;
+                background-color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+        .dynamic-frame {
+            width: 100%;
+            max-width: 950px;
+            flex: 1;
+            margin: 0 auto; /*  Center horizontally */
+            padding: 20px;
+            border: 4px solid black;
+            border-radius: 75px;
+            background-color: white;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+
+
+            .dynamic-frame::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Edge */
+            }
+
+        .section {
+            display: none;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        #section1 {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background: white;
+            box-sizing: border-box;
+        }
+
+        .submit-btn {
+            display: block;
+            margin: 20px auto 0;
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 20px;
+            cursor: pointer;
+        }
+
+        #section2 .close-btn,
+        #section2 .pdf-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 75px;
+            cursor: pointer;
+            margin: 10px;
+            font-weight: bold;
+        }
+
+        #section2 .button-group {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .button-container button {
+            padding: 10px 20px;
+            margin: 20px;
+            border-radius: 20px;
+            border: 2px solid black;
+            background: white;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .form-container,
+        .payslip-container {
+            border: 2px solid black;
+            border-radius: 30px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+            display: none;
+            box-sizing: border-box;
+        }
+
+        label {
+            display: block;
+            text-align: left;
+            margin: 10px 0 5px;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+
+        .skyblue-box {
+            background-color: #e0f7ff;
+            border: 2px solid #00aaff;
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            margin: 40px auto;
+            box-shadow: 0 4px 10px rgba(0, 170, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+            .skyblue-box h2 {
+                color: #007bbd;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 25px;
+            }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
+</head>
+<body>
+    
+        <!-- Right Side -->
+        <div class="right-content">
+            
+            <div class="content-frame">
+                <h2 style="margin-top: 20px;">Payroll Management</h2>
+                <div class="dashboard-buttons">
+                    <button onclick="showSection('section1')">Generate Payroll</button>
+                    <button onclick="showSection('section2')">View Payslips</button>
+                    
+                </div>
+               
+                
+                
+               
+
+                <div class="dynamic-frame">
+                    <div id="section1" class="section active">
+                        <div class="skyblue-box">
+                        <h2>Generate Payroll</h2>
+
+                       
+                        <!-- Department Dropdown -->
+                        <label>Select Department</label>
+                        <select id="departmentDropdown" onchange="calculateAll(); loadEmployeesByRole();">
+                            <option>Select</option>
+                        </select>
+
+                        <!-- Employee Dropdown -->
+                        <label>Select Employee</label>
+                        <select id="employeeDropdown" name="EmployeeName">
+                            <option>Select</option>
+                        </select>
+                        <label>Select Employee ID</label>
+<select id="employeeIdDropdown" name="EmployeeID">
+    <option>Select</option>
+</select>
+
+                        <label for="month">Select Month</label>
+                        <select id="month" required>
+                            <option value="">Select Month</option>
+                        </select>
+
+                        <label for="year">Select Year</label>
+                        <select id="year" required>
+                            <option value="">Select Year</option>
+                        </select>
+
+
+                        <label>Basic Salary</label>
+                        <input type="number" id="basicSalary" readonly>
+
+                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
+    <label style="width: 120px; font-weight: bold;">City Type</label>
+    <div style="display: flex; gap: 20px;">
+        <label style="display: flex; align-items: center;">
+            <input type="radio" name="city" value="metro" onchange="calculateAll()" style="margin-right: 5px;">
+            Metro
+        </label>
+        <label style="display: flex; align-items: center;">
+            <input type="radio" name="city" value="nonmetro" onchange="calculateAll()" checked style="margin-right: 5px;">
+            Non-Metro
+        </label>
+    </div>
+</div>
+
+                        <label>HRA</label>
+                        <input type="number" id="hra" readonly>
+
+                        <label>Allowances</label>
+                        <input type="number" id="allowances" readonly>
+
+                        <label>Deductions</label>
+                        <select id="deduction" onchange="calculateAll()">
+                            <option>Select</option>
+                        </select>
+
+                        <label>Net Salary</label>
+                        <input type="number" id="netSalary" readonly>
+
+                        <label>Generated Date</label>
+                        <input type="date" id="generatedDate">
+
+                        <button class="submit-btn" onclick="submitPayroll()">Submit</button>
+
+
+                        </div>
+                    </div>
+
+                    <!--  JavaScript for Dynamic Dropdowns & Salary Logic -->
+                  <script>
+    const salaryMap = {
+        "Project Manager": 80000,
+        "Civil Engineer": 35000,
+        "Site Engineer": 28000,
+        "Site Supervisor": 20000,
+        "Architect": 50000,
+        "Quantity Surveyor": 35000,
+        "Safety Officer": 30000,
+        "Mason": 20000,
+        "Carpenter": 15000,
+        "Electrician": 15000,
+        "Plumber": 15000,
+        "Painter": 15000,
+        "Helper / Laborers": 12000,
+        "Office Staff (HR/Admin)": 20000
+    };
+
+    const fixedHRA = {
+        "Project Manager": 10000,
+        "Civil Engineer": 5000,
+        "Site Engineer": 4000,
+        "Site Supervisor": 3000,
+        "Architect": 6000,
+        "Quantity Surveyor": 5000,
+        "Safety Officer": 4000,
+        "Mason": 2000,
+        "Carpenter": 2000,
+        "Electrician": 2000,
+        "Plumber": 2000,
+        "Painter": 2000,
+        "Helper / Laborers": 1500,
+        "Office Staff (HR/Admin)": 3000
+    };
+
+    window.onload = function () {
+        loadDepartments();
+        generateDeductionOptions();
+        populateMonthYearDropdown();
+        document.getElementById("generatedDate").valueAsDate = new Date();
+    };
+
+    function populateMonthYearDropdown() {
+        const monthDropdown = document.getElementById("month");
+        const yearDropdown = document.getElementById("year");
+        const months = [
+            "January", "February", "March", "April", "May", "June",
+            "July", "August", "September", "October", "November", "December"
+        ];
+        months.forEach(month => {
+            const option = document.createElement("option");
+            option.value = month;
+            option.text = month;
+            monthDropdown.appendChild(option);
+        });
+        const currentYear = new Date().getFullYear();
+        for (let i = currentYear - 5; i <= currentYear + 5; i++) {
+            const option = document.createElement("option");
+            option.value = i;
+            option.text = i;
+            yearDropdown.appendChild(option);
+        }
+        monthDropdown.value = months[new Date().getMonth()];
+        yearDropdown.value = currentYear;
+    }
+
+    function loadDepartments() {
+        fetch('/GeneratePayroll/GetAllDepartments')
+            .then(res => res.json())
+            .then(data => {
+                const deptDropdown = document.getElementById("departmentDropdown");
+                deptDropdown.innerHTML = '<option>Select</option>';
+                data.forEach(role => {
+                    const option = document.createElement("option");
+                    option.value = role;
+                    option.text = role;
+                    deptDropdown.appendChild(option);
+                });
+            })
+            .catch(err => console.error("Error loading departments:", err));
+    }
+
+    function loadEmployeesByRole() {
+        const role = document.getElementById("departmentDropdown").value;
+        if (role !== "Select") {
+            fetch(`/GeneratePayroll/GetEmployeesByRole?role=${encodeURIComponent(role)}`)
+                .then(res => res.json())
+                .then(data => {
+    const empDropdown = document.getElementById("employeeDropdown");
+    const idDropdown = document.getElementById("employeeIdDropdown");
+    empDropdown.innerHTML = '<option>Select</option>';
+    idDropdown.innerHTML = '<option>Select</option>';
+    data.forEach(emp => {
+        const optionName = document.createElement("option");
+        optionName.value = emp.fullName;
+        optionName.text = emp.fullName;
+        empDropdown.appendChild(optionName);
+
+        const optionId = document.createElement("option");
+        optionId.value = emp.employeeID;
+        optionId.text = emp.employeeID;
+        idDropdown.appendChild(optionId);
+    });
+})
+
+                .catch(err => console.error("Error loading employees:", err));
+        }
+    }
+
+    function generateDeductionOptions() {
+    const select = document.getElementById("deduction");
+    const opt0 = document.createElement("option");
+    opt0.value = 0;
+    opt0.text = "0";
+    select.appendChild(opt0);
+        for (let i = 1; i <= 31; i++) {
+            const opt = document.createElement("option");
+            opt.value = i;
+            opt.text = i;
+            select.appendChild(opt);
+        }
+    }
+
+    function getAllowance(role, basic) {
+        const highRoles = [
+            "Project Manager", "Civil Engineer", "Site Engineer", "Site Supervisor",
+            "Architect", "Quantity Surveyor", "Safety Officer", "Office Staff (HR/Admin)"
+        ];
+        return highRoles.includes(role) ? basic * 0.15 : basic * 0.10;
+    }
+
+    function calculateAll() {
+        const dept = document.getElementById("departmentDropdown").value;
+        const basic = salaryMap[dept] || 0;
+        document.getElementById("basicSalary").value = basic;
+
+        const city = document.querySelector('input[name="city"]:checked').value;
+        const hraPercent = city === "metro" ? 0.5 : 0.4;
+        const hraCalc = basic * hraPercent;
+        const hraFixed = fixedHRA[dept] || 0;
+        const hra = Math.max(hraCalc, hraFixed);
+        document.getElementById("hra").value = hra;
+
+        const allowance = getAllowance(dept, basic);
+        document.getElementById("allowances").value = allowance;
+
+        const deductionPercent = document.getElementById("deduction").value;
+        const deduction = getDeduction(basic, deductionPercent);
+
+        const net = basic + hra + allowance - deduction;
+        document.getElementById("netSalary").value = isNaN(net) ? "" : net.toFixed(2);
+    }
+
+    function getDeduction(basic, value) {
+        value = parseInt(value);
+        if (value === 0 || isNaN(value)) return 0; 
+        if (value >= 1 && value <= 5) return basic * 0.01;
+        if (value > 5 && value <= 10) return basic * 0.02;
+        if (value > 10 && value <= 15) return basic * 0.15;
+        if (value > 15 && value <= 30) return basic * 0.75;
+        return 0;
+    }
+
+    function submitPayroll() {
+    const department = document.getElementById("departmentDropdown");
+    const employee = document.getElementById("employeeDropdown");
+    const employeeID = document.getElementById("employeeIdDropdown"); 
+    const generatedDate = document.getElementById("generatedDate");
+
+    if (!department || !employee || !employeeID || !generatedDate) {
+        alert("❌ Form elements not found. Check element IDs!");
+        return;
+    }
+
+    const selectedDate = new Date(generatedDate.value);
+    const deductionPercentage = parseInt(document.getElementById("deduction").value);
+    const basic = parseFloat(document.getElementById("basicSalary").value);
+    const deductions = getDeduction(basic, deductionPercentage);
+    const city = document.querySelector('input[name="city"]:checked').value;
+
+    const model = {
+        Department: department.value,
+        EmployeeName: employee.value,
+        EmployeeID: employeeID.value, 
+        BasicSalary: basic,
+        IsMetroCity: city === "metro",
+        HRA: parseFloat(document.getElementById("hra").value),
+        Allowances: parseFloat(document.getElementById("allowances").value),
+        DeductionPercentage: deductionPercentage,
+        Deductions: deductions,
+        NetSalary: parseFloat(document.getElementById("netSalary").value),
+        GeneratedDate: selectedDate.toISOString(),
+        Month: document.getElementById("month").value,
+Year: parseInt(document.getElementById("year").value),
+
+    };
+
+    if (
+        isNaN(model.BasicSalary) ||
+        isNaN(model.HRA) ||
+        isNaN(model.Allowances) ||
+        isNaN(model.Deductions) ||
+        isNaN(model.NetSalary) ||
+        isNaN(model.Year)
+    ) {
+        alert("❌ One or more numeric values are invalid!");
+        return;
+    }
+
+    console.log("🟢 Submitting payroll:", model);
+
+    fetch("/GeneratePayroll/GeneratePayroll", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify(model)
+    })
+    .then(res => res.json())
+    .then(result => {
+        if (result.message) {
+            alert("✅ Payroll submitted successfully!");
+        } else {
+            const errorMsg = result.error || "Unknown error";
+            const errorDetails = result.errors ? "\n" + result.errors.join("\n") : "";
+            alert("❌ Failed to submit payroll: " + errorMsg + errorDetails);
+        }
+    })
+    .catch(err => {
+        console.error("❌ JS Error:", err);
+        alert("❌ Something went wrong while submitting.");
+    });
+}
+
+</script>
+
+
+
+               
+
+                    <div id="section2" class="section">
+                        <h2>View Payslips</h2>
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <label for="employeeSelect" class="form-label m-0">Select Employee:</label>
+                            <button class="btn btn-success btn-sm" onclick="loadEmployees()">🔄 Refresh</button>
+                        </div>
+                        <label for="employeeSelect">Select Employee:</label>
+                        <select id="employeeSelect">
+                            <option value="">-- Select Employee --</option>
+                        </select>
+
+                       
+                        <table id="payrollTable" style="display: none;">
+                            <thead>
+                                <tr>
+                                    <th>Employee ID</th>
+                                    <th>Month</th>
+                                    <th>Year</th>
+                                    <th>Basic Salary</th>
+                                    <th>HRA</th>
+                                    <th>Allowances</th>
+                                    <th>Deductions</th>
+                                    <th>Net Salary</th>
+                                    <th>Generated Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    <script>
+                        const baseUrl = "https://localhost:7140/api/ViewPayrollData"; 
+
+                        function loadEmployees() {
+                            fetch("/api/ViewPayrollData/employees")
+                                .then(response => response.json())
+                                .then(data => {
+                                    const dropdown = document.getElementById("employeeSelect");
+                                    dropdown.innerHTML = '<option value="">-- Select Employee --</option>';
+                                    data.forEach(emp => {
+                                        const option = document.createElement("option");
+                                        option.value = emp;
+                                        option.textContent = emp;
+                                        dropdown.appendChild(option);
+                                    });
+                                })
+                                .catch(error => console.error("Error loading employees:", error));
+                        }
+
+                        
+                        fetch(`${baseUrl}/employees`)
+                            .then(response => response.json())
+                            .then(data => {
+                                const select = document.getElementById("employeeSelect");
+                                data.forEach(name => {
+                                    const option = document.createElement("option");
+                                    option.value = name;
+                                    option.textContent = name;
+                                    select.appendChild(option);
+                                });
+                            });
+
+                           
+document.getElementById("employeeDropdown").addEventListener("change", function () {
+    const selectedName = this.value;
+    const idDropdown = document.getElementById("employeeIdDropdown");
+
+    
+    const selectedIndex = this.selectedIndex;
+    if (selectedIndex > 0 && idDropdown.options.length > selectedIndex) {
+        idDropdown.selectedIndex = selectedIndex;
+    }
+});
+
+
+
+                        
+                        document.getElementById("employeeSelect").addEventListener("change", function () {
+                            const name = this.value;
+                            const table = document.getElementById("payrollTable");
+                            const tbody = table.querySelector("tbody");
+                            tbody.innerHTML = "";
+
+                            if (name === "") {
+                                table.style.display = "none";
+                                return;
+                            }
+
+                            fetch(`${baseUrl}/payroll/${encodeURIComponent(name)}`)
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.length === 0) {
+                                        alert("No payroll records found.");
+                                        table.style.display = "none";
+                                        return;
+                                    }
+
+                                    data.forEach(record => {
+                                        const row = document.createElement("tr");
+                                        row.innerHTML = `
+                                         <td>${record.employeeID}</td>            
+                                        <td>${record.month}</td>
+                                                    <td>${record.year}</td>
+                                                    <td>${record.basicSalary}</td>
+                                                    <td>${record.hra}</td>
+                                                    <td>${record.allowances}</td>
+                                                    <td>${record.deductions}</td>
+                                                    <td>${record.netSalary}</td>
+                                                    <td>${new Date(record.generatedDate).toLocaleDateString()}</td>
+                                                   
+    <td>
+        <button class="btn btn-danger btn-sm" onclick="deletePayslip('${record.employeeID}', '${record.generatedDate}')">
+            <i class="bi bi-trash"></i>
+        </button>
+    </td>
+                                                `;
+                                        tbody.appendChild(row);
+                                    });
+
+                                    table.style.display = "table";
+                                })
+                                .catch(err => {
+                                    console.error(err);
+                                    alert("Error loading payroll data.");
+                                });
+                        });
+
+                        function deletePayslip(employeeID, generatedDate) {
+    if (confirm("Are you sure you want to delete this payslip?")) {
+        fetch(`/api/ViewPayrollData/delete/${employeeID}/${generatedDate}`, {
+            method: "DELETE"
+        })
+        .then(res => res.text())
+        .then(msg => {
+            alert("✅ Payslip removed.");
+            document.getElementById("employeeSelect").dispatchEvent(new Event("change"));
+        })
+        .catch(err => {
+            console.error(err);
+            alert("❌ Error deleting payslip.");
+        });
+    }
+}
+
+                    </script>
+
+                </div>
+            </div>
+        
+</body>
+</html>

@@ -1,0 +1,494 @@
+﻿@{
+    Layout = "~/Views/Admin/AdminLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ABC Construction</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+   
+    <style>
+
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden; 
+        }
+
+
+
+        .main-container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+
+
+        .sidebar {
+            width: 264px;
+            height: 100%;
+            background-color: #0990F0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            flex-shrink: 0;
+            box-sizing: border-box;
+        }
+
+
+    .side-btn {
+    width: 100%;
+    height: 83px;
+    background-color: #0990F0;
+    color: white;
+    font-weight: bold;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+    }
+
+    .side-btn:hover {
+    background-color: #066AC0;
+    }
+
+        .right-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            min-height: 0;
+            overflow: hidden;
+        }
+
+    .header {
+    height: 176px;
+    background-color: #0990F0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    position: relative;
+    z-index: 1;
+    }
+
+    .header h1 {
+    font-size: 48px;
+    color: white;
+    margin: 0;
+    text-align: center;
+    }
+
+        .content-frame {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            box-sizing: border-box;
+            overflow: hidden;
+        }
+
+
+
+    .dashboard-buttons {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    }
+
+    .dashboard-buttons button {
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: 2px solid black;
+    background-color: white;
+    font-weight: bold;
+    cursor: pointer;
+    }
+
+        .dynamic-frame {
+            flex: 1;
+            width: 100%;
+            max-width: 1080px;
+            border: 4px solid black;
+            border-radius: 75px;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+
+            .dynamic-frame::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            .dynamic-frame::-webkit-scrollbar-thumb {
+                background-color: #ccc;
+                border-radius: 10px;
+            }
+
+
+    .inner-box {
+    border: 2px solid #333;
+    border-radius: 20px;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    background: #fafafa;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.05);
+    margin: auto;
+    }
+
+    .inner-box h3 {
+    text-align: center;
+    margin: 0;
+    font-size: 20px;
+    color: #222;
+    }
+
+    .chart-container {
+    width: 100%;
+    max-width: 700px;
+    padding: 20px;
+    border: 2px solid black;
+    border-radius: 25px;
+    background-color: white;
+    margin: 20px auto;
+    }
+
+    h3 {
+    text-align: center;
+    margin-bottom: 20px;
+    }
+
+    .approval-container {
+    background: white;
+    border: 2px solid #333;
+    border-radius: 20px;
+    padding: 30px 20px;
+    width: 100%;
+    max-width: 1000px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    margin: auto;
+    overflow-x: auto;
+    box-sizing: border-box;
+    }
+
+    h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-size: 24px;
+    }
+
+    table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    font-size: 16px;
+    }
+
+    th, td {
+    border: 1.5px solid #333;
+    padding: 12px 15px;
+    }
+
+    th {
+    background-color: #f9f9f9;
+    font-weight: bold;
+    }
+
+    .status-btn {
+    padding: 6px 12px;
+    margin: 2px;
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    color: #fff;
+    cursor: pointer;
+    }
+
+    .reject {
+    background-color: #e74c3c;
+    }
+
+    .onhold {
+    background-color: #f39c12;
+    }
+
+    .accept {
+    background-color: #27ae60;
+    }
+
+    .status-btn:hover {
+    opacity: 0.9;
+    }
+
+    .section {
+    display: none;
+    }
+
+    .section.active {
+    display: block;
+    }
+
+    .styled-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    background-color: #ffffff;
+    border: 2px solid #00aaff;
+    box-shadow: 0 2px 5px rgba(0, 170, 255, 0.2);
+    border-radius: 6px;
+    }
+
+    .styled-table th,
+    .styled-table td {
+    border: 2px solid #00aaff;
+    padding: 10px 15px;
+    text-align: center;
+    font-size: 14px;
+    }
+
+    .styled-table th {
+    background-color: #e0f7ff;
+    color: #007bbd;
+    font-weight: bold;
+    }
+
+    .styled-table td {
+    background-color: #f9fcff;
+    }
+
+    .employee-container {
+    width: 100%;
+    max-width: 1000px;
+    margin: 10px auto;
+    padding: 10px;
+    background: white;
+    border: 3px solid black;
+    border-radius: 50px;
+    box-sizing: border-box;
+    overflow: auto;
+    }
+
+    .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 30px;
+    }
+
+    .employee-table {
+    width: 100%;
+    min-width: 600px;
+    border-collapse: collapse;
+    background-color: #f0f9ff;
+    border: 1px solid #00aaff;
+    }
+
+    .employee-table th,
+    .employee-table td {
+    border: 1px solid #00aaff;
+    padding: 12px;
+    text-align: center;
+    white-space: nowrap;
+    }
+
+    .employee-table th {
+    background-color: #d1f0ff;
+    color: #007bbd;
+    font-weight: bold;
+    }
+</style>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
+</head>
+<body>
+
+        <!-- Right Side -->
+        
+            <div class="content-frame">
+                <h2 style="margin-top: 20px;">Employee Management</h2>
+                <div class="dashboard-buttons">
+                    <button onclick="showSection('section1')">Total Employees</button>
+                    <button onclick="showSection('section3')">Pending Approvals</button>
+                </div>
+
+                <style>
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                    }
+
+                    th, td {
+                        padding: 10px;
+                        text-align: center;
+                    }
+
+                    tfoot td {
+                        font-weight: bold;
+                        background-color: #f0f0f0;
+                    }</style>
+                <div class="dynamic-frame">
+                    <div id="section1" class="section active">
+                        <h3>Total Employees</h3>
+
+                <div class="table-wrapper">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th>Serial No</th>
+                                <th>Employees</th>
+                                <th>Numbers of Employees</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- JavaScript fills this -->
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row">
+                                <td colspan="2">Total</td>
+                                <td id="totalCount">0</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+
+                        <script>
+                            fetch("/api/employees/rolesummary")
+                                .then(res => res.json())
+                                .then(data => {
+                                    const tbody = document.getElementById("tableBody");
+                                    const totalCount = document.getElementById("totalCount");
+                                    let total = 0;
+
+                                    data.forEach((item, index) => {
+                                        const tr = document.createElement("tr");
+                                        tr.innerHTML = `
+                                                <td>${index + 1}</td>
+                                                <td>${item.role}</td>
+                                                <td>${item.total}</td>
+                                            `;
+                                        tbody.appendChild(tr);
+                                        total += item.total;
+                                    });
+
+                                    totalCount.textContent = total;
+                                })
+                                .catch(error => {
+                                    console.error("Error loading employee data:", error);
+                                    document.getElementById("tableBody").innerHTML = `
+                                            <tr><td colspan="3">Error loading data</td></tr>
+                                        `;
+                                });
+                        </script>
+                       
+                    </div>
+                    
+                    <div id="section3" class="section">
+                        <h3>Pending Approvals</h3>
+                        <div class="approval-container">
+                            <h2>Pending Approvals</h2>
+                            <table border="1" cellpadding="8" width="100%">
+                                <thead>
+                                    <tr>
+                                        <th>Serial</th>
+                                        <th>EmployeeID</th>
+                                        <th>Project Name</th>
+                                        <th>Total Amount</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="approvalBody"></tbody>
+                            </table>
+                        </div>
+
+                        <script>
+                            async function loadApprovals() {
+                                try {
+                                    const response = await fetch("https://localhost:7140/api/PendingApprovals/approved-list");
+                                    const data = await response.json();
+
+                                    console.log("✅ API Data:", data); 
+
+                                    const tbody = document.getElementById("approvalBody");
+                                    tbody.innerHTML = "";
+
+                                    if (data.length === 0) {
+                                        tbody.innerHTML = `<tr><td colspan="5">No pending approvals.</td></tr>`;
+                                        return;
+                                    }
+
+                                    data.forEach((item, index) => {
+                                        const tr = document.createElement("tr");
+                                        tr.innerHTML = `
+                                                <td>${index + 1}</td>
+                                                <td>${item.employeeID}</td>
+                                                <td>${item.projectName}</td>
+                                                <td>₹${item.totalAmount.toFixed(2)}</td>
+                                                <td>
+                                                    <button onclick="submitApproval('${item.employeeID}', '${item.projectName}', ${item.totalAmount})">
+                                                        ✅ Approve
+                                                    </button>
+                                                </td>
+                                            `;
+                                        tbody.appendChild(tr);
+                                    });
+                                } catch (error) {
+                                    console.error("❌ Error loading approvals:", error);
+                                }
+                            }
+
+                            async function submitApproval(empId, project, totalAmount) {
+                                const payload = {
+                                    employeeID: empId,
+                                    projectName: project,
+                                    totalAmount: totalAmount,
+                                    status: "Approved"
+                                };
+
+                                const res = await fetch("https://localhost:7140/api/PendingApprovals/submit", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify(payload)
+                                });
+
+                                const result = await res.json();
+                                alert(result.message);
+                                loadApprovals(); 
+                            }
+
+                            
+                            window.onload = loadApprovals;
+                        </script>
+
+
+                    </div>
+
+                </div>
+            </div>
+        
+</body>
+</html>

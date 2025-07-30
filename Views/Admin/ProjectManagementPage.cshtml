@@ -1,0 +1,754 @@
+﻿@{
+    Layout = "~/Views/Admin/AdminLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!--  Add this to enable jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <title>ABC Construction</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+            font-family: Arial, sans-serif;
+            overflow: hidden; /* Prevent double scroll */
+        }
+
+
+        .main-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 264px;
+            height: 100vh;
+            background-color: #0990F0;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            box-sizing: border-box;
+            overflow-y: auto; 
+            overflow-x: hidden;
+            scrollbar-width: none; 
+        }
+
+            
+            .sidebar::-webkit-scrollbar {
+                display: none;
+            }
+
+
+
+        .header {
+            width: 100vw;
+            height: 176px;
+            background-color: #0990F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        .content-frame {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: white;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+
+
+        .dashboard-buttons {
+            margin: 1rem 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+            .dashboard-buttons button {
+                padding: 12px 20px;
+                border-radius: 30px;
+                border: 2px solid black;
+                background-color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+        .dynamic-frame {
+            flex: 1;
+            width: 100%;
+            max-width: none;
+            margin: 0;
+            padding: 30px;
+            border: 3px solid black;
+            border-radius: 20px;
+            background-color: #fff;
+            box-sizing: border-box;
+            overflow-y: auto;
+            overflow-x: auto;
+        }
+
+
+
+            .dynamic-frame::-webkit-scrollbar {
+                display: none; 
+            }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+            .form-group label {
+                font-weight: bold;
+                margin-bottom: 6px;
+                font-size: 1rem;
+            }
+
+            .form-group input,
+            .form-group select {
+                width: 100%;
+                padding: 10px;
+                font-size: 1rem;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+                box-sizing: border-box;
+            }
+
+        input[type="text"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        .btn-group {
+            margin-top: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: bold;
+            background-color: #0990F0;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+            .btn:hover {
+                background-color: #066AC0;
+            }
+
+        .table-container {
+            width: 100%;
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 1rem;
+        }
+
+            table thead {
+                background-color: #0990F0;
+                color: white;
+            }
+
+            table th, table td {
+                padding: 10px;
+                text-align: left;
+                border: 1px solid #ccc;
+            }
+
+        .section {
+            display: none;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        .skyblue-box {
+            background-color: #e0f7ff;
+            border: 2px solid #00aaff;
+            border-radius: 10px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 800px;
+            margin: 2rem auto;
+            box-shadow: 0 4px 10px rgba(0, 170, 255, 0.2);
+            box-sizing: border-box;
+        }
+
+            .skyblue-box h2 {
+                color: #007bbd;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 25px;
+            }
+    </style>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(s => s.classList.remove('active'));
+
+            const selected = document.getElementById(sectionId);
+            if (selected) {
+                selected.classList.add('active');
+            }
+        }
+
+        window.onload = function () {
+            showSection('section1');
+        };
+
+        function clearFileInput(id) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.value = "";
+            }
+        }
+    </script>
+</head>
+
+<body>
+  
+
+            <div class="content-frame">
+                <h2>Project Management</h2>
+                <div class="dashboard-buttons">
+                    <button onclick="showSection('section1')">Add New Project</button>
+                    <button onclick="showSection('section2')">Assigned Project</button>
+                    <button onclick="showSection('section3')">View Project List</button>
+                </div>
+
+
+
+                <div class="dynamic-frame">
+                    <div id="section1" class="section active">
+                        <div class="skyblue-box">
+                            <h2>ADD NEW PROJECT</h2>
+                            <div class="form-group">
+                                <label>Name</label>
+                                <input type="text" id="projectNameAdd" />
+                            </div>
+
+                            <div class="form-group mb-3">
+                                <label for="locationAdd">Location</label>
+                                <input type="text" id="locationAdd" class="form-control" placeholder="Enter Project Location" />
+                            </div>
+                            <div class="form-group">
+                                <label>Start Date</label>
+                                <input type="date" id="startDate" />
+                            </div>
+                            <div class="form-group">
+                                <label>End Date</label>
+                                <input type="date" id="endDate" />
+                            </div>
+
+                            <h5 class="mt-4">Address Details</h5>
+
+                            <div class="form-group">
+                                <label>No</label>
+                                <input type="text" id="no" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Address 1</label>
+                                <input type="text" id="address1" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Address 2</label>
+                                <input type="text" id="address2" class="form-control" />
+                            </div>
+
+                            <div class="form-group">
+                                <label>Taluk</label>
+                                <select id="taluk" class="form-select">
+                                    <option value="">Select Taluk</option>
+                                    <option value="Ambattur">Ambattur</option>
+                                    <option value="Aminjikarai">Aminjikarai</option>
+                                    <option value="Ayanavaram">Ayanavaram</option>
+                                    <option value="Egmore">Egmore</option>
+                                    <option value="Guindy">Guindy</option>
+                                    <option value="Madhavaram">Madhavaram</option>
+                                    <option value="Madhuravoyal">Madhuravoyal</option>
+                                    <option value="Mambalam">Mambalam</option>
+                                    <option value="Mylapore">Mylapore</option>
+                                    <option value="Perambur">Perambur</option>
+                                    <option value="Purasavakkam">Purasavakkam</option>
+                                    <option value="Sholinganallur">Sholinganallur</option>
+                                    <option value="Thiruvottriyur">Thiruvottriyur</option>
+                                    <option value="Tondiarpet">Tondiarpet</option>
+                                    <option value="Velachery">Velachery</option>
+                                    <option value="Avadi">Avadi</option>
+                                    <option value="Alandur">Alandur</option>
+                                    <option value="Annur">Annur</option>
+                                    <option value="Mettupalayam">Mettupalayam</option>
+                                    <option value="Sulur">Sulur</option>
+                                    <option value="Valparai">Valparai</option>
+                                    <option value="Pollachi">Pollachi</option>
+                                    <option value="Perur">Perur</option>
+                                    <option value="Madukarai">Madukarai</option>
+                                    <option value="Kinathukadavu">Kinathukadavu</option>
+                                    <option value="Sirkali">Sirkali</option>
+                                    <option value="Kuthalam">Kuthalam</option>
+                                    <option value="Tharangambadi">Tharangambadi</option>
+                                    <option value="Chinnaselam">Chinnaselam</option>
+                                    <option value="Kalvarayan Hills">Kalvarayan Hills</option>
+                                    <option value="Sankarapuram">Sankarapuram</option>
+                                    <option value="Ulundurpet">Ulundurpet</option>
+                                    <option value="Tirukoilur">Tirukoilur</option>
+                                    <option value="Arakkonam">Arakkonam</option>
+                                    <option value="Arcot">Arcot</option>
+                                    <option value="Kalavai">Kalavai</option>
+                                    <option value="Nemili">Nemili</option>
+                                    <option value="Sholingur">Sholingur</option>
+                                    <option value="Walajah">Walajah</option>
+                                    <option value="Ambur">Ambur</option>
+                                    <option value="Vaniyambadi">Vaniyambadi</option>
+                                    <option value="Natrampalli">Natrampalli</option>
+                                    <option value="Tenkasi">Tenkasi</option>
+                                    <option value="Alangulam">Alangulam</option>
+                                    <option value="Kadayanallur">Kadayanallur</option>
+                                    <option value="Sankarankovil">Sankarankovil</option>
+                                    <option value="Shenkottai">Shenkottai</option>
+                                    <option value="Sivagiri">Sivagiri</option>
+                                    <option value="Thiruvengadam">Thiruvengadam</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>District</label>
+                                <select id="district" class="form-select">
+                                    <option value="">Select District</option>
+                                    <option value="Ariyalur">Ariyalur</option>
+                                    <option value="Chengalpattu">Chengalpattu</option>
+                                    <option value="Chennai">Chennai</option>
+                                    <option value="Coimbatore">Coimbatore</option>
+                                    <option value="Cuddalore">Cuddalore</option>
+                                    <option value="Dharmapuri">Dharmapuri</option>
+                                    <option value="Dindigul">Dindigul</option>
+                                    <option value="Erode">Erode</option>
+                                    <option value="Kallakurichi">Kallakurichi</option>
+                                    <option value="Kancheepuram">Kancheepuram</option>
+                                    <option value="Karur">Karur</option>
+                                    <option value="Krishnagiri">Krishnagiri</option>
+                                    <option value="Madurai">Madurai</option>
+                                    <option value="Mayiladuthurai">Mayiladuthurai</option>
+                                    <option value="Nagapattinam">Nagapattinam</option>
+                                    <option value="Namakkal">Namakkal</option>
+                                    <option value="Nilgiris">Nilgiris</option>
+                                    <option value="Perambalur">Perambalur</option>
+                                    <option value="Pudukkottai">Pudukkottai</option>
+                                    <option value="Ramanathapuram">Ramanathapuram</option>
+                                    <option value="Ranipet">Ranipet</option>
+                                    <option value="Salem">Salem</option>
+                                    <option value="Sivaganga">Sivaganga</option>
+                                    <option value="Tenkasi">Tenkasi</option>
+                                    <option value="Thanjavur">Thanjavur</option>
+                                    <option value="Theni">Theni</option>
+                                    <option value="Thoothukudi">Thoothukudi</option>
+                                    <option value="Tiruchirappalli">Tiruchirappalli</option>
+                                    <option value="Tirunelveli">Tirunelveli</option>
+                                    <option value="Tirupathur">Tirupathur</option>
+                                    <option value="Tiruppur">Tiruppur</option>
+                                    <option value="Tiruvallur">Tiruvallur</option>
+                                    <option value="Tiruvannamalai">Tiruvannamalai</option>
+                                    <option value="Tiruvarur">Tiruvarur</option>
+                                    <option value="Vellore">Vellore</option>
+                                    <option value="Viluppuram">Viluppuram</option>
+                                    <option value="Virudhunagar">Virudhunagar</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Pincode</label>
+                                <input type="text" id="pincode" class="form-control" />
+                            </div>
+
+                            <div class="btn-group my-4">
+                                <button type="button"
+                                        class="btn btn-success btn-sm me-2"
+                                        style="width: 50px; font-size: 12px;"
+                                        onclick="submitProject()">
+                                    Submit
+                                </button>
+
+                                <button type="button"
+                                        class="btn btn-warning btn-sm"
+                                        style="width: 50px; font-size: 12px;"
+                                        onclick="updateProject()">
+                                    Update
+                                </button>
+                            </div>
+
+                            <!-- Toast -->
+                            
+                            <div id="toastSuccess"
+                                 class="toast text-bg-success position-fixed bottom-0 end-0 m-4"
+                                 role="alert" data-bs-delay="2000" data-bs-autohide="true"
+                                 style="z-index:9999;">
+                                <div class="d-flex">
+                                    <div class="toast-body">✅ Project saved successfully!</div>
+                                    <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                            data-bs-dismiss="toast" aria-label="Close"></button>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <script>
+                        function showToast() {
+                            let toast = new bootstrap.Toast(document.getElementById('toastSuccess'));
+                            toast.show();
+                        }
+
+                        function clearProjectForm() {
+                            $('#projectNameAdd, #locationAdd, #startDate, #endDate, #no, #address1, #address2, #pincode').val('');
+                            $('#taluk, #district').val('');
+                        }
+
+                        function getProjectFormData() {
+                            return {
+                                ProjectName: $('#projectNameAdd').val(),
+                                Location: $('#locationAdd').val(),
+                                StartDate: $('#startDate').val(),
+                                EndDate: $('#endDate').val(),
+                                No: $('#no').val(),
+                                Address1: $('#address1').val(),
+                                Address2: $('#address2').val(),
+                                Taluk: $('#taluk').val(),
+                                District: $('#district').val(),
+                                Pincode: $('#pincode').val()
+                            };
+                        }
+
+                        function submitProject() {
+                            $.ajax({
+                                url: '/ProjectManagement/AddProject',
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(getProjectFormData()),
+                                success: function (res) {
+                                    if (res.success) {
+                                        showToast();
+                                        clearProjectForm();
+                                    } else {
+                                        alert(res.message);
+                                    }
+                                }
+                            });
+                        }
+
+                        function updateProject() {
+                            $.ajax({
+                                url: '/ProjectManagement/UpdateProject', 
+                                method: 'POST',
+                                contentType: 'application/json',
+                                data: JSON.stringify(getProjectFormData()),
+                                success: function (res) {
+                                    if (res.success) {
+                                        showToast();
+                                        clearProjectForm();
+                                    } else {
+                                        alert(res.message);
+                                    }
+                                }
+                            });
+                        }
+                    </script>
+
+                   
+                    <style>
+                        .form-group {
+                            margin-bottom: 12px;
+                        }
+
+                        label {
+                            font-weight: 500;
+                        }
+                    </style>
+
+
+
+
+                    <div id="section2" class="section">
+                        <div class="skyblue-box">
+                            <h2>Assigned Project Employee</h2>
+
+                            <div class="form-group">
+                                <label>Project Name</label>
+                                <select id="projectName" class="form-control">
+                                    <option value="">-- Select Project --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Select Department</label>
+                                <select id="department" class="form-control">
+                                    <option value="">-- Select Department --</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Select Employee</label>
+                                <select id="employee" class="form-control">
+                                    <option value="">-- Select Employee --</option>
+                                </select>
+                            </div>
+
+                            <br />
+                            <button type="button" id="btnAdd" class="btn btn-primary">Add</button>
+
+                        </div>
+                        <hr />
+
+                        <h4>Allocated Department and Employees</h4>
+
+                        <table class="table table-bordered" id="assignedTable">
+                            <thead>
+                                <tr>
+                                    <th>Department</th>
+                                    <th>Employee ID</th>
+                                    <th>Employee</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+
+                        <button type="button" id="btnSubmit" class="btn btn-success">Submit</button>
+
+                        @section Scripts {
+                            <script>
+                                var assignedList = [];
+
+                                $(document).ready(function () {
+                                    
+                                    $.get('/api/AssignedProjectEmployeeData/GetProjects', function (data) {
+                                        data.forEach(p => {
+                                            $('#projectName').append(`<option value="${p}">${p}</option>`);
+                                        });
+                                    });
+
+                                    
+                                    $.get('/api/AssignedProjectEmployeeData/GetDepartments', function (data) {
+                                        data.forEach(d => {
+                                            $('#department').append(`<option value="${d}">${d}</option>`);
+                                        });
+                                    });
+
+                                    
+                                    $('#department').change(function () {
+                                        const dept = $(this).val();
+                                        $('#employee').empty().append('<option value="">-- Select Employee --</option>');
+
+                                        if (dept) {
+                                            $.get(`/api/AssignedProjectEmployeeData/GetEmployeesByDepartment?role=${encodeURIComponent(dept)}`, function (data) {
+                                                data.forEach(e => {
+                                                    $('#employee').append(`<option value="${e.employeeID}">${e.fullName}</option>`);
+                                                });
+                                            }).fail(function () {
+                                                alert("Failed to load employees.");
+                                            });
+                                        }
+                                    });
+
+                                });
+
+                                
+                                $('#btnAdd').click(function () {
+                                    var projectName = $('#projectName').val();
+                                    var department = $('#department').val();
+                                    var employeeId = $('#employee').val();
+                                    var employeeText = $('#employee option:selected').text();
+
+                                    if (projectName && department && employeeId) {
+                                        assignedList.push({
+                                            ProjectName: projectName,
+                                            Department: department,
+                                            EmployeeId: employeeId,
+                                            EmployeeName: employeeText
+                                        });
+
+                                        $('#assignedTable tbody').append(`
+                                                <tr>
+                                                    <td>${department}</td>
+                                                    <td>${employeeId}</td>
+                                                    <td>${employeeText}</td>
+                                                    <td><button type="button" class="btn btn-danger btn-sm remove">Remove</button></td>
+                                                </tr>
+                                            `);
+                                    } else {
+                                        alert('Please select all fields.');
+                                    }
+                                });
+
+                                
+                                $('#assignedTable').on('click', '.remove', function () {
+                                    const rowIndex = $(this).closest('tr').index();
+                                    assignedList.splice(rowIndex, 1);
+                                    $(this).closest('tr').remove();
+                                });
+
+                                
+                                $('#btnSubmit').click(function () {
+                                    if (assignedList.length === 0) {
+                                        alert('Please add at least one employee.');
+                                        return;
+                                    }
+
+                                    $.ajax({
+                                        url: '/api/AssignedProjectEmployeeData/Create',
+                                        type: 'POST',
+                                        contentType: 'application/json',
+                                        data: JSON.stringify(assignedList),
+                                        success: function (res) {
+                                            alert(res.message);
+                                        },
+                                        error: function (xhr, status, error) {
+                                            console.error("XHR:", xhr);
+                                            console.error("Status:", status);
+                                            console.error("Error:", error);
+                                            alert("Submission failed: " + xhr.responseText);
+                                        }
+                                    });
+                                });
+                            </script>
+
+
+                        }
+                    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <div id="section3" class="section">
+                        <h2 class="mb-4">VIEW PROJECT LIST</h2>
+
+                        <div class="form-group mb-3">
+                            <label for="viewProjectSelect">Select Project</label>
+                            <select id="viewProjectSelect" class="form-control">
+                                <option value="">-- Select Project --</option>
+                                <!-- Filled dynamically -->
+                            </select>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead style="background-color: #87CEEB; color: #000;">
+
+                                    <tr>
+                                        <th>Start Date</th>
+                                        <th>End Date</th>
+                                        <th>Department</th>
+                                        <th>Employees</th>
+                                        <th>Dr.No</th>
+                                        <th>Address</th>
+                                        <th>Taluk</th>
+                                        <th>District</th>
+                                        <th>Pincode</th>
+                                        <th>Location</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="projectTable"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <script>
+                $(document).ready(function () {
+
+                    
+                    $.get('/ViewProjectList/GetAllProjectNames', function (data) {
+                        data.forEach(p => {
+                            $('#viewProjectSelect').append(`<option value="${p.projectID}">${p.projectName}</option>`);
+                        });
+                    });
+
+                    $('#viewProjectSelect').change(function () {
+                        const projectId = $(this).val();
+                        if (!projectId) return;
+
+                        
+                        $.get(`/ViewProjectList/GetProjectDetails?projectId=${projectId}`, function (data) {
+                            let rows = '';
+                            data.forEach(row => {
+                                rows += `<tr>
+                                                        <td>${row.startDate?.substring(0, 10) || '-'}</td>
+                                                        <td>${row.endDate?.substring(0, 10) || '-'}</td>
+                                                        <td>${row.department || '-'}</td>
+                                                        <td>${row.employeeName || '-'}</td>
+                                                        <td>${row.no || '-'}</td>
+                                                        <td>${row.address1 || '-'} ${row.address2 || '-'}</td>
+                                                        <td>${row.taluk || '-'}</td>
+                                                        <td>${row.district || '-'}</td>
+                                                        <td>${row.pincode || '-'}</td>
+                                                        <td>${row.location || '-'}</td>
+                                                    </tr>`;
+                            });
+                            $('#projectTable').html(rows);
+                        });
+                    });
+                });
+            </script>
+
+</body>
+</html>

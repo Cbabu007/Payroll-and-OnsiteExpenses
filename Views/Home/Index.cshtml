@@ -1,0 +1,187 @@
+﻿@model PayrollandOnsiteExpenses.Models.User
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>ABC Construction - Login</title>
+    <style>
+    html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #d6e6f2;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
+    }
+
+    .page-title {
+        font-size: 2.5vw;
+        font-weight: bold;
+        margin-bottom: 2vh;
+        color: #0990F0;
+        text-align: center;
+    }
+
+    .center-wrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+
+    .login-container {
+        width: 90%;
+        max-width: 800px;
+        aspect-ratio: 2 / 1;
+        background-image: url('/images/PayrollBackground.jpg');
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid #0990F0;
+        border-radius: 20px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        overflow: hidden;
+        position: relative;
+    }
+
+    .overlay {
+        background-color: rgba(255, 255, 255, 0.6);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+    }
+
+    .form-content {
+        position: relative;
+        z-index: 2;
+        width: 90%;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        align-items: center;
+        gap: 5%;
+    }
+
+    .welcome-box {
+        flex: 1 1 300px;
+        text-align: center;
+        font-size: 1.8vw;
+        font-weight: bold;
+        color: white;
+        background-color: rgba(9, 144, 240, 0.7);
+        padding: 4vh 2vw;
+        border-radius: 100px;
+        box-sizing: border-box;
+    }
+
+    .form-box {
+        flex: 1 1 300px;
+        background-color: rgba(255, 255, 255, 0.9);
+        padding: 2vh 2vw;
+        border-radius: 10px;
+        box-sizing: border-box;
+    }
+
+    .form-box h2 {
+        text-align: center;
+        font-size: 1.5vw;
+        color: #000;
+        margin-bottom: 2vh;
+    }
+
+    .form-group {
+        margin-bottom: 2vh;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 0.5vh;
+        font-size: 1vw;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 0.8vh;
+        font-size: 1vw;
+        box-sizing: border-box;
+    }
+
+    .form-buttons-center {
+        display: flex;
+        justify-content: center;
+        margin-top: 2vh;
+    }
+
+    .btn-signup {
+        background-color: #0990F0;
+        color: #fff;
+        border: none;
+        padding: 1vh 3vw;
+        font-size: 1.2vw;
+        font-weight: bold;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s ease-in-out;
+        box-shadow: 0px 4px 15px rgba(9, 144, 240, 0.4);
+    }
+
+    .btn-signup:hover {
+        background-color: #066AC0;
+        transform: translateY(-2px);
+        box-shadow: 0px 6px 18px rgba(6, 106, 192, 0.5);
+    }
+</style>
+
+</head>
+<body>
+    <div class="center-wrapper">
+        <div class="page-title">ABC Construction</div>
+
+        <div class="login-container">
+            <div class="overlay"></div>
+
+            <div class="form-content">
+                <div class="welcome-box">
+                    WELCOME,<br />
+                    ABC Construction
+                </div>
+
+                <div class="form-box">
+                    <h2>Sign Up</h2>
+                    <form asp-controller="Home" asp-action="Index" method="post">
+
+
+                        <div class="form-group">
+                            <label asp-for="Username">Username</label>
+                            <input asp-for="Username" class="form-control" />
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="Password">Password</label>
+                            <input asp-for="Password" class="form-control" type="password" />
+                        </div>
+
+                        <div class="form-buttons-center">
+                            <button type="submit" class="btn-signup">Sign Up</button>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

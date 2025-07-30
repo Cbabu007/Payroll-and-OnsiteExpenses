@@ -1,0 +1,183 @@
+﻿@{
+    Layout = "~/Views/Employee/EmployeeLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ABC Construction</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 264px;
+            background-color: #0990F0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            flex-shrink: 0;
+            height: 100vh;
+        }
+
+        .side-btn {
+            width: 100%;
+            height: 83px;
+            background-color: #0990F0;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .side-btn:hover {
+                background-color: #066AC0;
+            }
+
+        .right-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background-color: white;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            height: 140px;
+            background-color: #0990F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            flex-shrink: 0;
+            width: 100%;
+            margin: 0; 
+        }
+
+        .content-frame {
+            flex: 1;
+            overflow-y: auto;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px;
+        }
+
+        h2 {
+            margin-bottom: 30px;
+        }
+
+        .viewer-box {
+            border: 2px solid black;
+            border-radius: 40px;
+            width: 100%;
+            max-width: 700px;
+            padding: 30px;
+            background-color: #fff;
+            overflow-x: auto;
+        }
+
+        table {
+            min-width: 600px;
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #0990F0;
+            color: white;
+            font-weight: bold;
+        }
+
+    </style>
+
+</head>
+<body>
+    
+
+        <div class="content-frame">
+            <h2>Claim Status Viewer</h2>
+            <div class="viewer-box">
+                <table id="statusTable">
+                    <thead>
+                        <tr>
+                            <th>Project Name</th>
+                            <th>Travel</th>
+                            <th>Food</th>
+                            <th>Accommodation</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+    <!-- Right thin bar -->
+
+    <script>
+        window.onload = function () {
+            fetch("/CurrentProjectStatus/GetProjectStatusByEmployee")
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.querySelector("#statusTable tbody");
+                    tbody.innerHTML = "";
+
+                    if (!data || data.length === 0 || data.success === false) {
+                        alert("No project status available.");
+                        return;
+                    }
+
+                    data.forEach(item => {
+                        const row = `
+                                            <tr>
+                                                <td>${item.projectName}</td>
+                                                <td>${item.travel}</td>
+                                                <td>${item.food}</td>
+                                                <td>${item.accommodation}</td>
+                                                        <td>${item.status}</td>
+                                            </tr>
+                                        `;
+                        tbody.innerHTML += row;
+                    });
+                })
+                .catch(error => {
+                    console.error("Error fetching project status:", error);
+                    alert("Failed to load project status.");
+                });
+        };
+    </script>
+</body>
+</html>

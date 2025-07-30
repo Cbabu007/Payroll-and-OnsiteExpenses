@@ -1,0 +1,593 @@
+﻿@{
+    Layout = "~/Views/Admin/AdminLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+
+    <title>ABC Construction</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
+
+        .main-container {
+            display: flex;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        .sidebar {
+            width: 264px;
+            background-color: #0990F0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            flex-shrink: 0;
+            height: 100vh;
+            overflow-y: auto;
+        }
+
+        .top-image-frame {
+            width: 247px;
+            height: 247px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .circle-img-container {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 5px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+            .circle-img-container img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+
+        .side-btn {
+            width: 100%;
+            height: 83px;
+            background-color: #0990F0;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .side-btn:hover {
+                background-color: #066AC0;
+            }
+
+        .right-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            background-color: white;
+        }
+
+        .header {
+            height: 176px;
+            background-color: #0990F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 24px;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        .dynamic-frame {
+            flex: 1;
+            overflow-y: auto;
+            overflow-x: hidden;
+            padding: 20px;
+            width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .dynamic-frame::-webkit-scrollbar {
+            display: none;
+        }
+
+        .container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            width: 100%;
+            max-width: 1100px;
+            justify-content: center;
+        }
+
+        .left-frame, .right-frame {
+            flex: 1 1 400px;
+            min-width: 280px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .form-section {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+            background-color: #e0f7ff;
+            border: 2px solid #00aaff;
+            border-radius: 15px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 15px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+            .form-row label {
+                min-width: 120px;
+                font-weight: bold;
+            }
+
+            .form-row input,
+            .form-row select {
+                flex: 1;
+                padding: 8px;
+                border-radius: 6px;
+                border: 1px solid #ccc;
+                min-width: 200px;
+                max-width: 100%;
+            }
+
+
+        .table-container {
+            overflow-x: auto;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            width: 100%;
+        }
+
+        table {
+            width: 100%;
+            min-width: 600px;
+            border-collapse: collapse;
+            background-color: white;
+        }
+
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f4f4f4;
+        }
+
+        textarea {
+            width: 100%;
+            height: 300px;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #aaa;
+            resize: none;
+        }
+
+        .skyblue-box {
+            background-color: #e0f7ff;
+            border: 2px solid #00aaff;
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 800px;
+            margin: 20px 0;
+            box-shadow: 0 4px 10px rgba(0, 170, 255, 0.2);
+        }
+
+            .skyblue-box h2 {
+                color: #007bbd;
+                font-weight: bold;
+                text-align: center;
+                margin-bottom: 25px;
+            }
+    </style>
+
+</head>
+<body>
+ 
+        <!-- Right Side -->
+        <div class="right-content">
+          
+            <div class="content-frame">
+                <style>
+                    .content-frame {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        justify-content: center;
+                        width: 100%;
+                    }
+                </style>
+                <div class="content-frame">
+                <h2 style="margin-top: 20px;">Employee Salary Details</h2>
+                <div class="dynamic-frame">
+
+
+                    <div class="skyblue-box">
+                        <div class="form-row" style="justify-content: center; margin-bottom: 20px;">
+                            <label for="employeeSelect">Select EmployeeID:</label>
+                            <select id="employeeSelect" onchange="fetchEmployeeDetails()">
+                                <option value="">-- Select --</option>
+                                <!-- Dynamic Options -->
+                            </select>
+                        </div>
+
+                        <div class="container">
+                            <!-- Left Frame -->
+                            <div class="left-frame">
+                                <form id="salaryForm">
+                                    <div class="form-row">
+                                        <label>Employee ID:</label>
+                                        <input type="text" id="EmployeeID" name="EmployeeID" readonly />
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Employee Name:</label>
+                                        <input type="text" id="EmployeeName" name="EmployeeName" readonly />
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Designation:</label>
+                                        <input type="text" id="Designation" name="Designation" readonly />
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Month:</label>
+                                        <select id="Month" name="Month" onchange="fetchPayrollDetails()">
+
+                                            <option value="">-- Select Month --</option>
+                                            <option>January</option>
+                                            <option>February</option>
+                                            <option>March</option>
+                                            <option>April</option>
+                                            <option>May</option>
+                                            <option>June</option>
+                                            <option>July</option>
+                                            <option>August</option>
+                                            <option>September</option>
+                                            <option>October</option>
+                                            <option>November</option>
+                                            <option>December</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-row">
+                                        <label>Year:</label>
+                                        <select id="Year" name="Year" onchange="fetchPayrollDetails()">
+
+                                            <option value="">-- Select Year --</option>
+                                            <script>
+                                                const currentYear = new Date().getFullYear();
+                                                for (let i = currentYear; i <= currentYear + 5; i++) {
+                                                    document.write(`<option value="${i}">${i}</option>`);
+                                                }
+                                            </script>
+                                        </select>
+                                    </div>
+
+                                    <div class="form-row"><label>LOP Days:</label><input type="number" id="LOPDays" /></div>
+                                    <div class="form-row"><label>Basic Salary:</label><input type="number" id="BasicSalary" name="BasicSalary" /></div>
+                                    <div class="form-row"><label>HRA:</label><input type="number" id="HRA" name="HRA" /></div>
+                                    <div class="form-row"><label>Food:</label><input type="number" id="Food" name="Food" /></div>
+                                    <div class="form-row"><label>Travel:</label><input type="number" id="Travel" name="Travel" /></div>
+                                    <div class="form-row"><label>Accommodation:</label><input type="number" id="Accommodation" name="Accommodation" /></div>
+                                    <div class="form-row"><label>Conveyance Allowance:</label><input type="number" id="ConveyanceAllowance" name="ConveyanceAllowance" /></div>
+                                    <div class="form-row"><label>Gross Earnings:</label><input type="number" id="GrossEarnings" name="GrossEarnings" /></div>
+                                    <div class="form-row"><label>EPF Contribution:</label><input type="number" id="EPFContribution" name="EPFContribution" /></div>
+                                    <div class="form-row"><label>Health Insurance:</label><input type="number" id="HealthInsurance" name="HealthInsurance" /></div>
+                                    <div class="form-row"><label>Total Deductions:</label><input type="number" id="TotalDeductions" name="TotalDeductions" /></div>
+                                    <div class="form-row"><label>Total Net Payable:</label><input type="number" id="TotalNetPayable" name="TotalNetPayable" /></div>
+                                    <div class="form-row"><label>Payslip (Upload):</label><input type="file" id="Payslip" /></div>
+
+
+
+
+
+                                    <div class="form-buttons">
+                                        <button type="button" onclick="submitForm()">Submit</button>
+                                        <button type="button" onclick="showData()">Show</button>
+                                        <div id="toast" style="display:none; position: fixed; bottom: 30px; right: 30px; background-color: #333; color: #fff; padding: 15px 20px; border-radius: 8px; font-weight: bold; z-index: 999;"></div>
+
+                                    </div>
+
+                                </form>
+
+
+
+                                <table id="dataTable">
+                                    <thead>
+                                        <tr>
+                                            <th>EmpID</th>
+                                            <th>Name</th>
+                                            <th>Designation</th>
+                                            <th>LOP</th>
+                                            <th>Basic</th>
+                                            <th>HRA</th>
+                                            <th>Food</th>
+                                            <th>Travel</th>
+                                            <th>Accommodation</th>
+                                            <th>Conveyance</th>
+                                            <th>Gross</th>
+                                            <th>EPF</th>
+                                            <th>Health</th>
+                                            <th>Deductions</th>
+                                            <th>Net Pay</th>
+                                            <th>Payslip</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                                <div id="pdfModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:white; z-index:1000;">
+                                    <button onclick="closePDF()" style="position:absolute; top:10px; right:10px; background-color:#dc3545; color:white; padding:8px 12px; border:none; border-radius:4px;">❌ Close</button>
+                                    <iframe id="pdfViewer" style="width:100%; height:100%; border:none;"></iframe>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- Right Frame: Calculator -->
+
+
+                    </div>
+                </div>
+            </div>        
+        </div>
+
+        <script>
+            function fetchEmployeeDetails() {
+                const id = document.getElementById("employeeSelect").value.trim();
+                if (!id) return;
+
+                fetch(`/EmployeeSalaryDetails/GetEmployeeDetails?employeeId=${id}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById("EmployeeID").value = data.employeeID || "";
+                        document.getElementById("EmployeeName").value = data.employeeName || "";
+                        document.getElementById("Designation").value = data.designation || "";
+                        if (data.dateOfJoining) {
+                            document.getElementById("DateOfJoining").value = data.dateOfJoining.split('T')[0];
+                        }
+                        // Optional: populate more if needed
+                    })
+                    .catch(error => console.error("Error fetching employee details:", error));
+            }
+
+            function loadEmployeeIDs() {
+                fetch("/EmployeeSalaryDetails/GetAllEmployeeIDs")
+                    .then(res => res.json())
+                    .then(data => {
+                        const dropdown = document.getElementById("employeeSelect");
+                        data.forEach(emp => {
+                            const opt = document.createElement("option");
+                            opt.value = emp.employeeID;
+                            opt.text = emp.employeeID;
+                            dropdown.appendChild(opt);
+                        });
+                    })
+                    .catch(err => console.error("Failed to load Employee IDs:", err));
+            }
+
+            function fetchPayrollDetails() {
+                const id = document.getElementById("employeeSelect").value.trim();
+                const month = document.getElementById("Month").value;
+                const year = document.getElementById("Year").value;
+
+                if (!id || !month || !year) return;
+
+                fetch(`/EmployeeSalaryDetails/GetPayrollDetails?employeeId=${id}&month=${month}&year=${year}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        document.getElementById("LOPDays").value = data.lopDays || 0;
+                        document.getElementById("BasicSalary").value = data.basicSalary || 0;
+                        document.getElementById("HRA").value = data.hra || 0;
+                        document.getElementById("Food").value = data.food || 0;
+                        document.getElementById("Travel").value = data.travel || 0;
+                        document.getElementById("Accommodation").value = data.accommodation || 0;
+                    })
+                    .catch(err => console.error("Failed to load payroll data:", err));
+            }
+
+
+            function submitForm() {
+                const form = document.getElementById("salaryForm");
+                const formData = new FormData(form);
+
+                const fileInput = document.getElementById("Payslip");
+                if (fileInput.files.length > 0) {
+                    formData.append("Payslip", fileInput.files[0]);
+                }
+
+                fetch("/EmployeeSalaryDetails/Submit", {
+                    method: "POST",
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            showToast("✅ " + data.message);
+                            form.reset();
+                            document.getElementById("EmployeeID").value = "";
+                            document.getElementById("EmployeeName").value = "";
+                            document.getElementById("Designation").value = "";
+                        } else {
+                            showToast("❌ Submission failed");
+                        }
+                    })
+                    .catch(err => {
+                        console.error("Submit error:", err);
+                        showToast("❌ Something went wrong");
+                    });
+            }
+
+
+            function showToast(message) {
+                const toast = document.getElementById("toast");
+                toast.textContent = message;
+                toast.style.display = "block";
+                toast.style.opacity = "1";
+
+                setTimeout(() => {
+                    toast.style.opacity = "0";
+                    setTimeout(() => {
+                        toast.style.display = "none";
+                    }, 500);
+                }, 3000);
+            }
+
+
+            //  SALARY CALCULATION LOGIC
+            function calculate() {
+                const get = id => parseFloat(document.getElementById(id).value) || 0;
+
+                const basic = get("BasicSalary");
+                const hra = get("HRA");
+                const food = get("Food");
+                const travel = get("Travel");
+                const accommodation = get("Accommodation");
+                const insurance = get("HealthInsurance");
+
+                //  NEW: Auto calculate ConveyanceAllowance
+                const conveyance = food + travel + accommodation;
+                document.getElementById("ConveyanceAllowance").value = conveyance.toFixed(2);
+
+
+                const gross = basic + hra + food + travel + accommodation + conveyance;
+                const epf = basic * 0.12;
+                const totalDeduction = epf + insurance;
+                const netPay = gross - totalDeduction;
+
+                document.getElementById("GrossEarnings").value = gross.toFixed(2);
+                document.getElementById("EPFContribution").value = epf.toFixed(2);
+                document.getElementById("TotalDeductions").value = totalDeduction.toFixed(2);
+                document.getElementById("TotalNetPayable").value = netPay.toFixed(2);
+            }
+
+            //  CALCULATOR LOGIC BELOW THIS
+            function appendCalc(val) {
+                document.getElementById("calc").value += val;
+            }
+
+            function clearCalc() {
+                document.getElementById("calc").value = "";
+            }
+
+
+
+
+            window.onload = function () {
+                loadEmployeeIDs(); //  THIS LINE IS NOW INCLUDED
+                ["BasicSalary", "HRA", "Food", "Travel", "Accommodation", "ConveyanceAllowance", "HealthInsurance"]
+                    .forEach(id => {
+                        const el = document.getElementById(id);
+                        if (el) el.addEventListener("input", calculate);
+                    });
+            };
+
+
+            function showData() {
+                fetch("/EmployeeSalaryDetails/GetAllPayslips")
+                    .then(res => res.json())
+                    .then(data => {
+                        const tbody = document.querySelector("#dataTable tbody");
+                        tbody.innerHTML = "";
+
+                        data.forEach(item => {
+                            const row = document.createElement("tr");
+                            row.innerHTML = `
+                                            <td>${item.employeeID}</td>
+                                            <td>${item.employeeName}</td>
+                                            <td>${item.designation}</td>
+                                            <td>${item.lopDays}</td>
+                                            <td>${item.basicSalary}</td>
+                                            <td>${item.hra}</td>
+                                            <td>${item.food}</td>
+                                            <td>${item.travel}</td>
+                                            <td>${item.accommodation}</td>
+                                            <td>${item.conveyanceAllowance}</td>
+                                            <td>${item.grossEarnings}</td>
+                                            <td>${item.epfContribution}</td>
+                                            <td>${item.healthInsurance}</td>
+                                            <td>${item.totalDeductions}</td>
+                                            <td>${item.totalNetPayable}</td>
+                                                                 <td>
+                            <a href="${item.PayslipFilePath}" download="Payslip_${item.EmployeeID}.pdf">Download</a>
+                        </td>
+
+
+
+
+
+                                        `;
+                            tbody.appendChild(row);
+                        });
+                    })
+                    .catch(err => {
+                        console.error("Fetch error:", err);
+                        showToast("❌ Failed to load data");
+                    });
+            }
+
+            function viewPDF(filePath) {
+                const modal = document.getElementById("pdfModal");
+                const viewer = document.getElementById("pdfViewer");
+
+                viewer.src = filePath;
+                modal.style.display = "block";
+            }
+
+            function closePDF() {
+                const modal = document.getElementById("pdfModal");
+                const viewer = document.getElementById("pdfViewer");
+
+                viewer.src = "";
+                modal.style.display = "none";
+            }
+        </script>
+
+
+</body>
+</html>

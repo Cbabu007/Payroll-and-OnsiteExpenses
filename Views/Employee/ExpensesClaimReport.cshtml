@@ -1,0 +1,428 @@
+﻿@{
+    Layout = "~/Views/Employee/EmployeeLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ABC Construction</title>
+    <link rel="stylesheet" href="~/css/site.css" />
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+        }
+
+        .main-container {
+            display: flex;
+            flex-wrap: wrap;
+            width: 100%;
+            height: 100%;
+        }
+
+        .sidebar {
+            width: 264px;
+            background-color: #0990F0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 20px;
+            flex-shrink: 0;
+            height: 100%;
+        }
+
+        .side-btn {
+            width: 100%;
+            height: 83px;
+            background-color: #0990F0;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+        }
+
+            .side-btn:hover {
+                background-color: #066AC0;
+            }
+
+        .right-content {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: column;
+            background-color: #f4f4f4;
+            height: 100%;
+            overflow: hidden;
+        }
+
+        .header {
+            width: 100%;
+            height: 176px;
+            background-color: #0990F0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+            .header h1 {
+                font-size: 48px;
+                color: white;
+                text-align: center;
+                margin: 0;
+            }
+
+        .content-frame {
+            flex: 1 1 auto;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .dashboard-buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+            .dashboard-buttons button {
+                padding: 12px 20px;
+                border-radius: 30px;
+                border: 2px solid black;
+                background-color: white;
+                font-weight: bold;
+                cursor: pointer;
+            }
+
+        .dynamic-frame {
+            width: 100%;
+            max-width: 1060px;
+            height: auto;
+            border: 4px solid black;
+            border-radius: 75px;
+            padding: 20px;
+            overflow: auto;
+        }
+
+        .form-box {
+            border: 2px solid black;
+            border-radius: 40px;
+            width: 95%;
+            max-width: 600px;
+            margin: auto;
+            padding: 40px 50px;
+            background-color: #fff;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 150px 1fr;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 10px;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"],
+        input[type="file"],
+        select {
+            padding: 8px;
+            border: 1px solid #000;
+            width: 100%;
+        }
+
+        .btn-row {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            background-color: red;
+            color: white;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .section {
+            display: none;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        #toast {
+            visibility: hidden;
+            min-width: 250px;
+            background-color: #333;
+            color: #fff;
+            text-align: center;
+            border-radius: 5px;
+            padding: 10px;
+            position: fixed;
+            z-index: 1;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    </style>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(s => s.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+        }
+    </script>
+</head>
+<body>
+
+    <div class="content-frame">
+        <h2 style="margin-top: 20px;">Expenses Claim Report</h2>
+
+
+        <div class="form-box">
+
+            <div class="form-row">
+                <label for="employeeId">Employee ID</label>
+                <input type="text" id="employeeId" />
+            </div>
+            <div class="form-row">
+                <label for="projectName">Project Name</label>
+                <select id="projectName">
+                    <option value="">Select Project</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <label for="expenseType">Expenses</label>
+                <select id="expenseType" name="ExpenseType">
+                    <option value="">Select Expense</option>
+                    <option value="Travel">Travel</option>
+                    <option value="Food">Food</option>
+                    <option value="Accommodation">Accommodation</option>
+                </select>
+
+            </div>
+
+            <div class="form-row">
+                <label for="amount">Amount</label>
+                <input type="number" id="amount" />
+            </div>
+
+            <div class="form-row" style="text-align:right; padding-right: 20px;">
+                <button onclick="addExpense()" class="add-btn">Add</button>
+            </div>
+
+            <div class="form-row">
+                <label for="date">Date</label>
+                <input type="date" id="date" />
+            </div>
+
+            <div class="form-row">
+                <label for="fileUpload">Upload File</label>
+                <input type="file" id="fileUpload" accept=".pdf" />
+            </div>
+
+            <div class="btn-row">
+                <button class="btn" onclick="submitForm()">Submit</button>
+                <button class="btn" onclick="resetForm()">Cancel</button>
+            </div>
+        </div>
+
+        <!-- Toast Message -->
+        <div id="toast" style="
+    visibility: hidden;
+    min-width: 250px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 5px;
+    padding: 10px;
+    position: fixed;
+    z-index: 9999;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: visibility 0s, opacity 0.5s ease-in-out;
+    opacity: 0;
+">
+            Added Successfully!
+        </div>
+
+        <!-- Expense Table -->
+        <table id="expenseTable" style="margin: 20px auto; width: 80%; border-collapse: collapse; display: none;">
+            <thead>
+                <tr style="background-color: #f2f2f2;">
+                    <th style="border: 1px solid #ccc; padding: 8px;">Expense Type</th>
+                    <th style="border: 1px solid #ccc; padding: 8px;">Amount (₹)</th>
+                    <th style="border: 1px solid #ccc; padding: 8px;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="expenseTableBody">
+                <!-- Dynamic rows will be added here -->
+            </tbody>
+        </table>
+
+        <script>
+            // Load project names from server on page load
+            window.onload = function () {
+                fetch('/ExpensesClaimReport/GetProjects')
+                    .then(res => res.json())
+                    .then(data => {
+                        const select = document.getElementById("projectName");
+                        data.forEach(p => {
+                            const opt = document.createElement("option");
+                            opt.value = p.projectId;
+                            opt.textContent = p.projectName;
+                            select.appendChild(opt);
+                        });
+                    });
+            };
+
+            function showToast(message) {
+                const toast = document.getElementById("toast");
+                toast.innerText = message;
+                toast.style.visibility = "visible";
+                toast.style.opacity = "1";
+                setTimeout(() => {
+                    toast.style.opacity = "0";
+                    setTimeout(() => {
+                        toast.style.visibility = "hidden";
+                    }, 500);
+                }, 2000);
+            }
+
+            function addExpense() {
+                const expense = document.getElementById("expenseType").value;
+                const amount = document.getElementById("amount").value;
+
+                if (!expense || !amount) {
+                    alert("Please select expense and enter amount.");
+                    return;
+                }
+
+                const tableBody = document.getElementById("expenseTableBody");
+
+                const newRow = document.createElement("tr");
+                newRow.innerHTML = `
+                                                                <td style="border: 1px solid #ccc; padding: 8px;">${expense}</td>
+                                                                <td style="border: 1px solid #ccc; padding: 8px;">₹${amount}</td>
+                                                                <td style="border: 1px solid #ccc; padding: 8px; text-align:center;">
+                                                                    <button onclick="this.parentElement.parentElement.remove()">❌</button>
+                                                                </td>
+                                                            `;
+
+                tableBody.appendChild(newRow);
+                document.getElementById("expenseTable").style.display = "table";
+
+                showToast(`${expense} - ₹${amount} added`);
+
+                // Clear inputs
+                document.getElementById("expenseType").selectedIndex = 0;
+                document.getElementById("amount").value = "";
+            }
+
+            function submitForm() {
+                const employeeId = document.getElementById("employeeId").value;
+                const projectId = document.getElementById("projectName").value;
+                const date = document.getElementById("date").value;
+                const fileUpload = document.getElementById("fileUpload").files[0];
+                const tableRows = document.querySelectorAll("#expenseTableBody tr");
+
+                if (!projectId || !date || !fileUpload || tableRows.length === 0) {
+                    alert("Please fill all fields before submitting.");
+                    return;
+                }
+
+                const formData = new FormData();
+                formData.append("EmployeeId", employeeId);
+                formData.append("ProjectId", projectId);
+                formData.append("Date", date);
+                formData.append("FileUpload", fileUpload);
+
+                // Collect expenses
+                const expenses = [];
+                tableRows.forEach(row => {
+                    const expenseType = row.cells[0].innerText;
+                    const amount = row.cells[1].innerText.replace("₹", "").trim();
+                    expenses.push({
+                        ExpenseType: expenseType,
+                        Amount: amount
+                    });
+                });
+
+                formData.append("ExpensesJson", JSON.stringify(expenses)); 
+
+                fetch('/ExpensesClaimReport/Submit', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(async (res) => {
+                        if (!res.ok) {
+                            const text = await res.text();  // Get raw error message
+                            throw new Error("Server error " + res.status + ": " + text);
+                        }
+                        return res.json();
+                    })
+                    .then(data => {
+                        if (data.success) {
+                            alert("Submitted successfully!");
+                            clearForm();
+                        } else {
+                            alert(data.message || "Submission failed!");
+                        }
+                    })
+                    .catch(err => {
+                        alert("Error: " + err.message);
+                    });
+
+
+            }
+
+
+            function resetForm() {
+                clearForm();
+            }
+
+            function clearForm() {
+                document.getElementById("projectName").selectedIndex = 0;
+                document.getElementById("expenseType").selectedIndex = 0;
+                document.getElementById("amount").value = "";
+                document.getElementById("date").value = "";
+                document.getElementById("fileUpload").value = "";
+                document.getElementById("expenseTableBody").innerHTML = "";
+                document.getElementById("expenseTable").style.display = "none";
+            }
+        </script>
+
+    </div>
+
+
+
+</body>
+</html>

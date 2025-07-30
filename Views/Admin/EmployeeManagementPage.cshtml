@@ -1,0 +1,1143 @@
+﻿@{
+    Layout = "~/Views/Admin/AdminLayout.cshtml";
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%;
+            font-family: Arial, sans-serif;
+            scrollbar-width: thin;
+            -ms-overflow-style: auto;
+            overflow: auto;
+        }
+
+        .content-frame {
+            width: 100%;
+            min-height: 100vh;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .dashboard-buttons {
+            margin: 20px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+
+            .dashboard-buttons button {
+                padding: 12px 20px;
+                border-radius: 30px;
+                border: 2px solid black;
+                background-color: white;
+                font-weight: bold;
+                cursor: pointer;
+                white-space: nowrap;
+            }
+
+        .dynamic-frame {
+            width: 100%;
+            max-width: 1080px;
+            min-height: 600px;
+            border: 4px solid black;
+            border-radius: 75px;
+            padding: 20px;
+            background-color: white;
+            box-sizing: border-box;
+            overflow-x: auto;
+            overflow-y: auto;
+            scrollbar-width: thin;
+        }
+
+            .dynamic-frame::-webkit-scrollbar {
+                width: 6px;
+                height: 6px;
+            }
+
+            .dynamic-frame::-webkit-scrollbar-thumb {
+                background-color: #ccc;
+                border-radius: 10px;
+            }
+
+
+        .qualification-scroll-container {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+
+        .qualification-table {
+            min-width: 800px;
+            border-collapse: collapse;
+            background-color: #e8f4fd;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+            .qualification-table th,
+            .qualification-table td {
+                padding: 10px;
+                text-align: center;
+                border: 1px solid #007bff;
+            }
+
+            .qualification-table input[type="text"],
+            .qualification-table input[type="file"] {
+                width: 100%;
+                box-sizing: border-box;
+                padding: 8px;
+                border-radius: 5px;
+                border: 1px solid #ccc;
+            }
+
+
+        .section {
+            display: none;
+        }
+
+            .section.active {
+                display: block;
+            }
+
+        .form-box {
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .frame-container {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .left-frame,
+        .right-frame {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+            box-sizing: border-box;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+        input[type="text"],
+        input[type="password"],
+        input[type="date"],
+        input[type="file"],
+        select {
+            width: 100%;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border: 2px solid #007bff;
+            border-collapse: collapse;
+            background-color: #e8f4fd;
+            font-size: 15px;
+            box-sizing: border-box;
+        }
+
+        thead {
+            background-color: #f0f0f0;
+        }
+
+        th,
+        td {
+            padding: 10px;
+            text-align: left;
+        }
+
+            #qualificationBody button,
+            .qualification-add-row td button,
+            td button[onclick="addQualification()"] {
+                background-color: #28a745 !important;
+                border-radius: 100px !important;
+                color: white;
+                padding: 10px 30px;
+                border: none;
+                font-weight: bold;
+                width: 100%;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            }
+
+        .qualification-add-row td {
+            padding: 10px;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 20px;
+            box-sizing: border-box;
+        }
+
+            .button-row button {
+                padding: 10px 30px;
+                background-color: red;
+                color: white;
+                border: none;
+                font-weight: bold;
+                border-radius: 10px;
+                cursor: pointer;
+            }
+    </style>
+
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(s => s.classList.remove('active'));
+
+            const selected = document.getElementById(sectionId);
+            if (selected) {
+                selected.classList.add('active');
+            }
+        }
+
+
+        window.onload = function () {
+            showSection('section1');
+        };
+    </script>
+
+    <script>
+        function clearFileInput(id) {
+            const input = document.getElementById(id);
+            if (input) {
+                input.value = "";
+            }
+        }
+    </script>
+
+
+    <script>
+        function previewImage(input) {
+            const preview = document.getElementById('photoPreview');
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }
+
+        function previewEditImage(input) {
+            const preview = document.getElementById('editPhotoPreview');
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }
+
+        function previewDeleteImage(input) {
+            const preview = document.getElementById('deletePhotoPreview');
+            const file = input.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    preview.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }
+
+    </script>
+    <script>
+        function showToast(message) {
+            const toastBody = document.getElementById('toastBody');
+            toastBody.innerText = message;
+
+            const toastElement = new bootstrap.Toast(document.getElementById('successToast'));
+            toastElement.show();
+        }
+
+        window.onload = function () {
+            var successMessage = '@TempData["Success"]';
+            if (successMessage && successMessage !== '') {
+                showToast(successMessage);
+               }
+           };
+    </script>
+
+    <script>
+        function loadEmployeeForEdit() {
+            const empId = document.getElementById('editEmpId').value;
+
+            fetch(`/EditEmployee/Find?employeeId=${empId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error("Employee not found.");
+                    return response.json();
+                })
+                .then(data => {
+                    document.querySelector('input[name="FirstName"]').value = data.FirstName;
+                    document.querySelector('input[name="LastName"]').value = data.LastName;
+                    document.querySelector('input[name="PhoneNumber"]').value = data.PhoneNumber;
+                    document.querySelector('input[name="AltPhoneNumber"]').value = data.AltPhoneNumber;
+                    document.querySelector('input[name="DOB"]').value = data.DOB;
+                    document.querySelector('input[name="DoorNo"]').value = data.DoorNo;
+                    document.querySelector('input[name="Address1"]').value = data.Address1;
+                    document.querySelector('input[name="Address2"]').value = data.Address2;
+                    document.querySelector('input[name="Taluk"]').value = data.Taluk;
+                    document.querySelector('input[name="District"]').value = data.District;
+                    document.querySelector('input[name="State"]').value = data.State;
+                    document.querySelector('input[name="Pincode"]').value = data.Pincode;
+                    document.querySelector('input[name="Country"]').value = data.Country;
+                    document.querySelector('input[name="Email"]').value = data.Email;
+                    document.querySelector('input[name="Username"]').value = data.Username;
+                    document.querySelector('input[name="Password"]').value = data.Password;
+                    document.querySelector('input[name="EmployeeID"]').value = data.EmployeeID;
+                    document.querySelector('select[name="Role"]').value = data.Role;
+
+                    if (data.Qualifications.length > 0) {
+                        const q = data.Qualifications[0];
+                        document.querySelector('select[name="QualificationType"]').value = q.QualificationType;
+                        document.querySelector('input[name="Subject"]').value = q.Subject;
+                        document.querySelector('input[name="CertificateNumber"]').value = q.CertificateNumber;
+
+                    }
+
+                    showToast("Employee data loaded successfully!");
+                })
+                .catch(err => {
+                    console.error(err);
+                    showToast("Failed to load employee data.");
+                });
+        }
+    </script>
+
+
+
+
+
+</head>
+
+<body>
+
+    <div class="content-frame">
+        <h2 style="margin-top: 20px;">Employee Management</h2>
+        <div class="dashboard-buttons">
+            <button onclick="showSection('section1')">Add New Employee</button>
+            <button onclick="showSection('section2')">Edit Employee</button>
+            <button onclick="showSection('section3')">Delete Employee</button>
+            <button onclick="showSection('section4')">View All Employees</button>
+        </div>
+        <div class="dynamic-frame">
+            <div id="section1" class="section active">
+                <h3 style="text-align: center;">Add New Employee</h3>
+
+
+                <div style="display: flex; justify-content: center;">
+                    <form method="post" enctype="multipart/form-data" action="/AddEmployee/Create">
+
+
+
+                        <div style="display: flex; gap: 40px; margin-bottom: 30px;">
+
+                            <div style="flex: 1; display: flex; justify-content: center;">
+                                <div>
+                                    <br><br>
+                                    <img id="photoPreview" alt="Preview"
+                                         style="
+         width: 100%;
+         max-width: 300px;
+         height: auto;
+         max-height: 400px;
+         aspect-ratio: 3 / 4;
+         object-fit: cover;
+         border: 4px solid #ccc;
+         border-radius: 6px;
+         box-shadow: 0 0 10px rgba(0,0,0,0.2);
+         transition: all 0.3s ease-in-out;
+     " />
+                                    <br />
+                                    <input type="file" name="Photo" onchange="previewImage(this)" style="margin-top: 10px;" />
+                                </div>
+                            </div>
+
+
+                            <div style="flex: 2;">
+                                <div style="border: 3px solid skyblue; border-radius: 25px; padding: 25px; margin-top: 30px; background-color: #f8fbff;">
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="FirstName" placeholder="First Name" style="width: 100%;" />
+                                        <input type="text" name="LastName" placeholder="Last Name" style="width: 100%;" />
+                                    </div>
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="PhoneNumber" placeholder="Phone Number" style="width: 100%;" />
+                                        <input type="text" name="AltPhoneNumber" placeholder="Alt Phone Number" style="width: 100%;" />
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <div style="display: inline-flex; align-items: center; border: 1px solid #ccc; border-radius: 5px; padding: 8px 12px; gap: 10px; background-color: #f9f9f9;">
+                                            <label for="DOB" class="form-label" style="margin: 0;">DOB</label>
+                                            <input type="date" name="DOB" style="border: none; outline: none; background: transparent;" />
+                                        </div>
+
+                                        <input type="text" name="Email" placeholder="Email" style="width: 100%;" />
+                                    </div>
+                                </div>
+                                <div style="border: 3px solid skyblue; border-radius: 25px; padding: 25px; margin-top: 30px; background-color: #f8fbff;">
+                                    <h5 class="mb-3" style="color: #0990F0;">Address Details</h5>
+
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="DoorNo" placeholder="Door No" style="width: 100%;" />
+                                        <input type="text" name="Address1" placeholder="Address1 (Street)" style="width: 100%;" />
+                                    </div>
+
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="Address2" placeholder="Address2 (Location)" style="width: 100%;" />
+                                        <input type="text" name="Taluk" placeholder="Taluk" style="width: 100%;" />
+                                    </div>
+
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="District" placeholder="District" style="width: 100%;" />
+                                        <input type="text" name="State" placeholder="State" style="width: 100%;" />
+                                    </div>
+
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="Pincode" placeholder="Pincode" style="width: 100%;" />
+                                        <input type="text" name="Country" placeholder="Country" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Qualification Section -->
+                        <h4 style="text-align: center;">Qualification</h4>
+                        <div style="overflow-x: auto;">
+                            <table border="1" cellpadding="5" cellspacing="0" style="margin: 0 auto; width: 100%; max-width: 100%; border-collapse: collapse;">
+                                <thead style="background-color: #f0f0f0;">
+                                    <tr>
+                                        <th>Qualification</th>
+                                        <th>Subject</th>
+                                        <th>Certificate No</th>
+                                        <th>Certificate Doc</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="qualificationBody">
+                                    <!-- JS will populate rows here -->
+                                </tbody>
+                                <tr>
+                                    <td>
+                                        <select id="qualType" style="width: 100%;">
+                                            <option value="">--Select--</option>
+                                            <option>10th</option>
+                                            <option>11th</option>
+                                            <option>12th</option>
+                                            <option>Diploma</option>
+                                            <option>B.Sc</option>
+                                            <option>BA</option>
+                                            <option>B.Tech</option>
+                                            <option>BE</option>
+                                            <option>M.Sc</option>
+                                            <option>MA</option>
+                                            <option>M.Tech</option>
+                                            <option>ME</option>
+                                            <option>BBA</option>
+                                            <option>MBA</option>
+                                        </select>
+                                    </td>
+                                    <td><input type="text" id="qualSubject" placeholder="Subject" style="width: 100%;" /></td>
+                                    <td><input type="text" id="qualCertNo" placeholder="Certificate No" style="width: 100%;" /></td>
+                                    <td><input type="file" id="qualCertFile" style="width: 100%;" /></td>
+                                    <td>
+                                        <button type="button" onclick="addQualification()" style="
+        background-color: #28a745;
+        color: white;
+        padding: 10px 30px;
+        width: 100%;
+        border: none;
+        border-radius: 100px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    ">
+                                            Add
+                                        </button>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <input type="hidden" name="QualificationsJson" id="QualificationsJson" />
+
+
+                        <!-- Account Info -->
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <input type="text" name="EmployeeID" placeholder="Employee ID" style="flex: 1;" />
+                            <input type="text" name="Username" placeholder="Username" style="flex: 1;" />
+                            <input type="password" name="Password" placeholder="Password" style="flex: 1;" />
+                            <select name="Role" style="flex: 1;">
+                                <option>Role</option>
+                                <option>Project Manager</option>
+                                <option>Civil Engineer</option>
+                                <option>Site Engineer</option>
+                                <option>Site Supervisor</option>
+                                <option>Architect</option>
+                                <option>Quantity Surveyor</option>
+                                <option>Safety Officer</option>
+                                <option>Mason</option>
+                                <option>Carpenter</option>
+                                <option>Electrician</option>
+                                <option>Plumber</option>
+                                <option>Painter</option>
+                                <option>Helper / Laborers</option>
+                                <option>Office Staff (HR/Admin)</option>
+                            </select>
+                        </div>
+
+                        <!-- Buttons -->
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button type="submit" style="
+        background-color: #0d6efd;
+        color: white;
+        padding: 10px 30px;
+        margin-right: 10px;
+        border: none;
+        border-radius: 100px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    ">
+                                Submit
+                            </button>
+                            <button type="reset" style="
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 100px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    ">
+                                Reset
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index: 10000">
+                <div id="successToast" class="toast align-items-center text-white bg-success border-0" role="alert">
+                    <div class="d-flex">
+                        <div class="toast-body" id="toastBody">
+                            Success!
+                        </div>
+                        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                    </div>
+                </div>
+            </div>
+            <script>
+                const qualifications = [];
+
+                function addQualification() {
+                    const type = document.getElementById("qualType").value;
+                    const subject = document.getElementById("qualSubject").value;
+                    const certNo = document.getElementById("qualCertNo").value;
+                    const certFileInput = document.getElementById("qualCertFile");
+
+                    if (!type || !subject || !certNo || certFileInput.files.length === 0) {
+                        alert("Please fill all fields and upload certificate");
+                        return;
+                    }
+
+                    // Create a new row with input fields (array-style names)
+                    const table = document.getElementById("qualificationBody");
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>
+                            <input type="text" name="QualificationType" value="${type}" readonly class="form-control-plaintext" />
+                        </td>
+                        <td>
+                            <input type="text" name="Subject" value="${subject}" readonly class="form-control-plaintext" />
+                        </td>
+                        <td>
+                            <input type="text" name="CertificateNumber" value="${certNo}" readonly class="form-control-plaintext" />
+                        </td>
+                        <td>
+                            <input type="file" name="CertificateDoc" class="qualCertFile" required /
+                        </td>
+                        <td>
+                            <button type="button" onclick="this.closest('tr').remove()" style="background-color: #dc3545; color: white;">Remove</button>
+                        </td>
+                    `;
+                    table.appendChild(row);
+
+                    // Ask user to re-select the file for the new row (browser security)
+                    const newFileInput = row.querySelector('input[type="file"]');
+                    // Optionally, you can show a message to the user to re-select the file
+
+                    // Clear the add fields
+                    document.getElementById("qualType").value = "";
+                    document.getElementById("qualSubject").value = "";
+                    document.getElementById("qualCertNo").value = "";
+                    certFileInput.value = "";
+                }
+            </script>
+
+
+            <!--  Edit Employee Section -->
+            <div id="section2" class="section">
+                <h3 style="text-align: center;">Edit Employee</h3>
+
+                <!--  Employee ID Dropdown -->
+
+                <div style="display: flex; align-items: center; justify-content: center; gap: 12px; max-width: 500px; margin: 30px auto; padding: 12px 16px; background-color: #f9f9ff; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.08);">
+                    <label for="editEmpId" style="font-weight: bold; color: #0d6efd;">Employee ID:</label>
+                    <select id="editEmpId" onchange="loadEmployeeForEdit()"
+                            style="flex: 1; padding: 10px; border: 1px solid #ccc; border-radius: 8px; font-size: 16px; background-color: white;">
+                        <option value="">-- Select Employee ID --</option>
+                    </select>
+                </div>
+
+
+                <!--  Form -->
+                <div style="display: flex; justify-content: center;">
+                    <form enctype="multipart/form-data" style="width: 100%; max-width: 900px;" id="employeeForm">
+                        <input type="hidden" name="UpdateType" id="UpdateType" value="employee" />
+
+                        <!-- Profile & Inputs -->
+                        <div style="display: flex; gap: 40px; margin-bottom: 30px;">
+                            <div style="flex: 1; display: flex; justify-content: center;">
+                                <div>
+                                    <br><br>
+                                    <img id="editPhotoPreview" alt="Edit Preview"
+                                         style="width: 300px; height: 400px; object-fit: cover; border: 4px solid #ccc; border-radius: 6px;" />
+                                    <br />
+                                    <input type="file" name="Photo" onchange="previewEditImage(this)" style="margin-top: 10px;" />
+                                </div>
+                            </div>
+
+                            <div style="flex: 2;">
+                                <div style="border: 3px solid skyblue; border-radius: 25px; padding: 25px; margin-top: 30px; background-color: #f8fbff;">
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="FirstName" id="FirstName" placeholder="First Name" style="width: 100%;" />
+                                        <input type="text" name="LastName" id="LastName" placeholder="Last Name" style="width: 100%;" />
+                                    </div>
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="PhoneNumber" id="PhoneNumber" placeholder="Phone Number" style="width: 100%;" />
+                                        <input type="text" name="AltPhoneNumber" id="AltPhoneNumber" placeholder="Alt Phone Number" style="width: 100%;" />
+                                    </div>
+                                    <div style="display: flex; gap: 10px;">
+                                        <div style="display: inline-flex; align-items: center; border: 1px solid #ccc; border-radius: 5px; padding: 8px 12px; gap: 10px; background-color: #f9f9f9;">
+                                            <label for="DOB" class="form-label" style="margin: 0;">DOB</label>
+                                            <input type="date" name="DOB" style="border: none; outline: none; background: transparent;" />
+                                        </div>
+
+                                        <input type="text" name="Email" id="Email" placeholder="Email" style="width: 100%;" />
+                                    </div>
+                                </div>
+
+                                <div style="border: 3px solid skyblue; border-radius: 25px; padding: 25px; margin-top: 30px; background-color: #f8fbff;">
+                                    <h5 class="mb-3" style="color: #0990F0;">Address Details</h5>
+
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="DoorNo" placeholder="Door No" style="width: 100%;" />
+                                        <input type="text" name="Address1" placeholder="Address1 (Street)" style="width: 100%;" />
+                                    </div>
+
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="Address2" placeholder="Address2 (Location)" style="width: 100%;" />
+                                        <input type="text" name="Taluk" placeholder="Taluk" style="width: 100%;" />
+                                    </div>
+
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="District" placeholder="District" style="width: 100%;" />
+                                        <input type="text" name="State" placeholder="State" style="width: 100%;" />
+                                    </div>
+
+                                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                                        <input type="text" name="Pincode" placeholder="Pincode" style="width: 100%;" />
+                                        <input type="text" name="Country" placeholder="Country" style="width: 100%;" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!--  Login + Role -->
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <input type="text" name="EmployeeID" id="EmployeeID" placeholder="Employee ID" style="flex: 1;" readonly />
+                            <input type="text" name="Username" id="Username" placeholder="Username" style="flex: 1;" />
+                            <input type="password" name="Password" id="Password" placeholder="Password" style="flex: 1;" />
+                            <select name="Role" id="Role" style="flex: 1;">
+                                <option>Project Manager</option>
+                                <option>Civil Engineer</option>
+                                <option>Site Engineer</option>
+                                <option>Site Supervisor</option>
+                                <option>Architect</option>
+                                <option>Quantity Surveyor</option>
+                                <option>Safety Officer</option>
+                                <option>Mason</option>
+                                <option>Carpenter</option>
+                                <option>Electrician</option>
+                                <option>Plumber</option>
+                                <option>Painter</option>
+                                <option>Helper / Laborers</option>
+                                <option>Office Staff (HR/Admin)</option>
+                            </select>
+                        </div>
+
+                        <!--  Buttons -->
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button type="button" id="updateButton" style="
+        background-color: #0d6efd;
+        color: white;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 100px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        margin-right: 10px;
+    ">
+                                Update
+                            </button>
+                            <button type="reset" onclick="clearFormToast()" style="
+        background-color: #6c757d;
+        color: white;
+        padding: 10px 30px;
+        border: none;
+        border-radius: 100px;
+        font-weight: bold;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    ">
+                                Reset
+                            </button>
+                        </div>
+
+                    </form>
+                </div>
+
+                <!--  Toast Notifications -->
+                <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+                <script>
+                    function loadEmployeeForEdit() {
+                        const empId = document.getElementById('editEmpId').value;
+                        if (!empId) return;
+
+                        fetch(`/EditEmployee/GetById?id=${empId}`)
+                            .then(response => {
+                                if (!response.ok) throw new Error("Failed to fetch data.");
+                                return response.json();
+                            })
+                            .then(data => {
+                                // Fill form fields
+                                document.getElementById('FirstName').value = data.firstName || "";
+                                document.getElementById('LastName').value = data.lastName || "";
+                                document.getElementById('PhoneNumber').value = data.phoneNumber || "";
+                                document.getElementById('AltPhoneNumber').value = data.altPhoneNumber || "";
+                                document.querySelector('input[name="DOB"]').value = data.dob?.split("T")[0] || "";
+                                document.getElementById('Email').value = data.email || "";
+                                document.querySelector('input[name="DoorNo"]').value = data.doorNo || "";
+                                document.querySelector('input[name="Address1"]').value = data.address1 || "";
+                                document.querySelector('input[name="Address2"]').value = data.address2 || "";
+                                document.querySelector('input[name="Taluk"]').value = data.taluk || "";
+                                document.querySelector('input[name="District"]').value = data.district || "";
+                                document.querySelector('input[name="State"]').value = data.state || "";
+                                document.querySelector('input[name="Pincode"]').value = data.pincode || "";
+                                document.querySelector('input[name="Country"]').value = data.country || "";
+                                document.getElementById('EmployeeID').value = data.employeeID || "";
+                                document.getElementById('Username').value = data.username || "";
+                                document.getElementById('Password').value = data.password || "";
+                                document.getElementById('Role').value = data.role || "";
+
+                                //  Photo Preview
+                                document.getElementById('editPhotoPreview').src = data.photoPath || "/images/no-image.png";
+
+                                toastr.success("Employee data loaded successfully");
+                            })
+                            .catch(err => {
+                                console.error(err);
+                                toastr.error("Unable to load employee details.");
+                            });
+                    }
+                </script>
+
+                <script>
+                    document.getElementById('updateButton').addEventListener('click', function () {
+                        const form = document.getElementById('employeeForm');
+                        const formData = new FormData(form);
+
+                        fetch('/EditEmployee/Update', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(response => {
+                            if (!response.ok) throw new Error("Failed to update");
+                            return response.json();
+                        })
+                        .then(result => {
+                            if (result.success) {
+                                toastr.success("Employee updated successfully!");
+                            } else {
+                                toastr.error("Update failed: " + result.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error("Error updating employee:", error);
+                            toastr.error("Update failed.");
+                        });
+                    });
+                </script>
+
+            </div>
+
+
+
+
+
+
+
+            <div id="section3" class="section">
+                <h3 style="text-align: center;">Delete Employee</h3>
+
+                <!-- Search by Employee ID -->
+                <div style="display: flex; align-items: center; gap: 12px; max-width: 420px; margin: 20px auto; padding: 12px 16px; border-radius: 12px; background-color: #fff8f8; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+                    <label for="deleteEmpId" style="font-weight: bold; color: #d9534f;">Employee ID:</label>
+                    <input type="text" id="deleteEmpId" name="deleteEmpId" placeholder="Enter ID"
+                           style="flex: 1; padding: 8px 12px; border: 1px solid #ccc; border-radius: 6px;" />
+                    <button type="button" id="btnFindEmployee"
+                            style="background-color: #d9534f; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                        OK
+                    </button>
+                </div>
+
+
+                <!-- Form Container -->
+                <div style="display: flex; justify-content: center;">
+                    <form style="width: 100%; max-width: 900px;" method="post" enctype="multipart/form-data">
+                        <!-- Image + Info Row -->
+                        <div style="display: flex; gap: 40px; margin-bottom: 30px;">
+                            <div style="flex: 1; display: flex; justify-content: center;">
+                                <br><br><br><br>
+                                <img id="deletePhotoPreview" alt="Delete Preview"
+                                     style="width: 180px; height: 180px; object-fit: cover; border: 4px solid #ccc; border-radius: 6px;" />
+                            </div>
+                            <div style="flex: 2;">
+                                <div style="border: 3px solid skyblue; border-radius: 25px; padding: 25px; margin-top: 30px; background-color: #f8fbff;">
+                                    <input type="text" name="FirstName" placeholder="First Name" disabled style="width: 49%;" />
+                                    <input type="text" name="LastName" placeholder="Last Name" disabled style="width: 49%;" />
+                                    <input type="text" name="PhoneNumber" placeholder="Phone Number" disabled style="width: 49%; margin-top: 10px;" />
+                                    <input type="text" name="AltPhoneNumber" placeholder="Alt Phone Number" disabled style="width: 49%; margin-top: 10px;" />
+                                    <input type="date" name="DOB" disabled style="width: 49%; margin-top: 10px;" />
+                                    <input type="text" name="Address" placeholder="Address" disabled style="width: 49%; margin-top: 10px;" />
+                                    <input type="text" name="Email" placeholder="Email" disabled style="width: 100%; margin-top: 10px;" />
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Account Fields -->
+                        <!-- Buttons -->
+                        <div style="text-align: center; margin-top: 30px;">
+                            <button type="button" id="btnDeleteEmployee" style="
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 100px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+">
+                                Delete
+                            </button>
+
+                            <!-- Cancel Button -->
+                            <button type="reset" style="
+    background-color: #6c757d;
+    color: white;
+    padding: 10px 30px;
+    border: none;
+    border-radius: 100px;
+    font-weight: bold;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+">
+                                Cancel
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- JS Libraries -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+            <!-- JavaScript -->
+            <script>
+                $(document).ready(function () {
+                    $("#btnFindEmployee").click(function () {
+                        const empId = $("#deleteEmpId").val().trim();
+                        if (!empId) return toastr.warning("Enter Employee ID");
+
+                        $.get(`/DeleteEmployee/Find?employeeId=${empId}`)
+                            .done(function (data) {
+                                toastr.success("Employee Selected");
+
+                                $("#deletePhotoPreview").attr("src", data.photoPath || "/no-image.png");
+                                $("input[name='FirstName']").val(data.firstName);
+                                $("input[name='LastName']").val(data.lastName);
+                                $("input[name='PhoneNumber']").val(data.phoneNumber);
+                                $("input[name='AltPhoneNumber']").val(data.altPhoneNumber);
+                                $("input[name='DOB']").val(data.dob);
+                                $("input[name='Address']").val(data.address);
+                                $("input[name='Email']").val(data.email);
+                                $("input[name='EmployeeID']").val(data.employeeID);
+                                $("input[name='Username']").val(data.username);
+                                $("select[name='Role']").val(data.role);
+
+                                const q = data.qualifications[0] || {};
+                                $("select[name='QualificationType']").val(q.qualificationType);
+                                $("#qualificationSubject").val(q.subject);
+                                $("#qualificationCertificateNumber").val(q.certificateNumber);
+                                $("#qualificationRow").data("qualification-id", q.qualificationID);
+                            })
+                            .fail(() => toastr.error("Employee not found"));
+                    });
+
+                    $("#btnRemoveQualification").click(function () {
+                        const qualId = $("#qualificationRow").data("qualification-id");
+                        if (!qualId) return toastr.warning("No qualification to remove");
+
+                        $.post(`/DeleteEmployee/RemoveQualification/${qualId}`)
+                            .done(() => toastr.info("Qualification Removed"))
+                            .fail(() => toastr.error("Removal failed"));
+                    });
+
+                    $("#btnDeleteEmployee").click(function () {
+                        const empId = $("#deleteEmpId").val().trim();
+                        if (!empId) return toastr.warning("Enter Employee ID");
+
+                        if (!confirm("Are you sure to delete this employee permanently?")) return;
+
+                        $.post(`/DeleteEmployee/Delete/${empId}`)
+                            .done(() => { toastr.success("Employee Deleted"); location.reload(); })
+                            .fail(() => toastr.error("Deletion failed"));
+                    });
+                });
+            </script>
+
+
+
+            <div id="section4" class="section">
+
+                <h3 style="text-align: center;">View Employee</h3>
+
+                <!-- Top Control Row -->
+                <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                    <!-- Left: Search by ID -->
+                    <div style="display: flex; align-items: center; gap: 10px; max-width: 400px; margin: 20px auto; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 12px 16px; border-radius: 12px; background-color: #f8fbff;">
+                        <label for="viewEmpId" style="font-weight: bold; color: #0990F0;">Employee ID:</label>
+                        <input type="text" id="viewEmpId" name="viewEmpId" placeholder="Enter ID"
+                               style="flex: 1; padding: 8px 12px; border-radius: 6px; border: 1px solid #ccc;" />
+                        <button type="button" id="btnSearchEmployee"
+                                style="background-color: #00aa44; color: white; padding: 8px 20px; border: none; border-radius: 6px; font-weight: bold; box-shadow: 0 2px 6px rgba(0,0,0,0.1);">
+                            OK
+                        </button>
+                    </div>
+
+
+                    <!-- Right: View All -->
+
+                </div>
+
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img id="photoOnlyPreview" alt="Photo Preview"
+                         style="width: 252px; height: 250px; object-fit: cover; border: 4px solid #ccc; border-radius: 10px;" />
+                </div>
+                <!-- Input Box -->
+                <!-- Employee Table -->
+                <!-- Frame 1: Personal + Address Details -->
+                <div id="frame1" style="display: none; border: 2px solid skyblue; border-radius: 15px; padding: 20px; margin-bottom: 20px; background-color: #f8fbff;">
+
+                    <h5 class="mt-3" style="color: #0990F0;">Employee & Address Details</h5>
+                    <div class="row">
+                        <div class="col-md-4"><strong>Employee ID:</strong> <span id="empIdText"></span></div>
+                        <div class="col-md-4"><strong>Employee Name:</strong> <span id="empNameText"></span></div>
+                        <div class="col-md-4"><strong>Phone Number:</strong> <span id="phoneText"></span></div>
+                        <div class="col-md-4"><strong>Alt Phone:</strong> <span id="altPhoneText"></span></div>
+                        <div class="col-md-4"><strong>Date of Birth:</strong> <span id="dobText"></span></div>
+                        <div class="col-md-4"><strong>Email:</strong> <span id="emailText"></span></div><br />
+                        <div class="col-md-4"><strong>Role:</strong> <span id="roleText"></span></div>
+                        <div class="col-md-12 mt-3"><strong>Address:</strong> <span id="fullAddressText"></span></div>
+                    </div>
+                </div>
+
+                <!-- Frame 2: Education Details -->
+                <div id="frame2" style="display: none; border: 2px solid skyblue; border-radius: 15px; padding: 20px; background-color: #f8fbff;">
+                    <h5 style="color: #0990F0;">Education Information</h5>
+                    <table class="table table-bordered mt-3">
+                        <thead style="background-color: #e0f3ff;">
+                            <tr>
+                                <th>Serial No</th>
+                                <th>Qualification</th>
+                                <th>Subject</th>
+                                <th>Certificate No</th>
+                            </tr>
+                        </thead>
+                        <tbody id="educationTableBody">
+                            <!-- Rows inserted via JS -->
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+            <!-- JS and Toastr -->
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" />
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+
+            <script>
+                        $(document).ready(function () {
+                            $("#btnSearchEmployee").click(function () {
+                                const empId = $("#viewEmpId").val().trim();
+                                if (!empId) return toastr.warning("Please enter Employee ID");
+
+                                fetch(`/ViewEmployee/Find?employeeId=${empId}`)
+                                    .then(res => {
+                                        if (!res.ok) throw new Error("Employee not found");
+                                        return res.json();
+                                    })
+                                    .then(data => {
+                                        toastr.success("Employee Loaded");
+                                        $("#frame1").show();
+                                        $("#frame2").show();
+
+                                        //  Show image outside the frame
+                                        const rawPath = data.photoPath?.trim();
+                                        let fixedPath = rawPath?.replace(/\\/g, '/');
+                                        let photoUrl = "/images/no-image.png";
+
+                                        if (fixedPath) {
+                                            if (!fixedPath.startsWith("/uploads/photos/")) {
+                                                photoUrl = `/uploads/photos/${fixedPath}`;
+                                            } else {
+                                                photoUrl = fixedPath;
+                                            }
+                                        }
+
+                                        console.log("Resolved Photo URL:", photoUrl);
+                                        $("#photoOnlyPreview").attr("src", photoUrl);
+
+
+
+
+                                        // Fill Employee Details
+                                        $("#empIdText").text(data.employeeID);
+                                        $("#empNameText").text(data.firstName + " " + data.lastName);
+                                        $("#phoneText").text(data.phoneNumber);
+                                        $("#altPhoneText").text(data.altPhoneNumber);
+                                        $("#dobText").text(data.dob);
+                                        $("#emailText").text(data.email);
+                                        $("#roleText").text(data.role);
+
+                                        // Full address
+                                        $("#fullAddressText").text(
+                                            `${data.doorNo}, ${data.address1}, ${data.address2}, ${data.taluk}, ${data.district}, ${data.state}, ${data.pincode}, ${data.country}`
+                                        );
+
+                                        // Qualifications Table
+                                        const tbody = $("#educationTableBody");
+                                        tbody.empty();
+                                        data.qualifications.forEach((q, index) => {
+                                            tbody.append(`
+                                                                                                    <tr>
+                                                                                                        <td>${index + 1}</td>
+                                                                                                        <td>${q.qualificationType}</td>
+                                                                                                        <td>${q.subject}</td>
+                                                                                                        <td>${q.certificateNumber}</td>
+                                                                                                    </tr>
+                                                                                                `);
+                                        });
+                                    })
+                                    .catch(err => {
+                                        toastr.error(err.message);
+                                        $("#frame1").hide();
+                                        $("#frame2").hide();
+                                    });
+                            });
+                        });
+                                    fetch('/EditEmployee/GetEmployeeIDs')
+                .then(res => res.json())
+                .then(data => {
+                    const select = document.getElementById('editEmpId');
+                    data.forEach(id => {
+                        const opt = document.createElement("option");
+                        opt.value = id;
+                        opt.textContent = id;
+                        select.appendChild(opt);
+                    });
+                });
+
+            </script>
+
+
+
+
+        </div>
+    </div>
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success text-center" role="alert">
+            @TempData["Success"]
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger text-center" role="alert">
+            @TempData["Error"]
+        </div>
+    }
+
+
+</body>
+
+</html>
